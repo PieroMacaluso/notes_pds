@@ -1,6 +1,14 @@
 # Introduzione al C++
 
+- [Introduzione al C++](#Introduzione-al-C)
+  - [Passaggio dei parametri](#Passaggio-dei-parametri)
+  - [Copia e Assegnazione](#Copia-e-Assegnazione)
+  - [Regola dei tre](#Regola-dei-tre)
+  - [Assegnazione per movimento](#Assegnazione-per-movimento)
+  - [Paradigma Copy&Swap](#Paradigma-CopySwap)
+
 ## Passaggio dei parametri
+
 - per valore, i parametri vengono duplicati appoggiandosi al costruttore di copia
 - per indirizzo, viene passata una copia dell'indirizzo del dato.
 - per riferimento, sintatticamente è un passaggio per valore, ma in semanticamente è un passaggio per indirizzo. Non può essere NULL.

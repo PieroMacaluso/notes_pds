@@ -1,5 +1,15 @@
 # Modello di Esecuzione
 
+- [Modello di Esecuzione](#Modello-di-Esecuzione)
+  - [Livello di astrazione](#Livello-di-astrazione)
+  - [Librerie di esecuzione](#Librerie-di-esecuzione)
+  - [Modello di esecuzione di C e C++](#Modello-di-esecuzione-di-C-e-C)
+  - [Concorrenza](#Concorrenza)
+  - [Processi](#Processi)
+  - [Esecuzione di un programma](#Esecuzione-di-un-programma)
+  - [Caricamento del codice eseguibile](#Caricamento-del-codice-eseguibile)
+  - [Funzione di avvio](#Funzione-di-avvio)
+
 Ogni linguaggio di programmazione propone un modello di esecuzione, ma tale modello solitamente non corrisponde ad un sistema reale.
 E' compito del compilatore di introdurre uno strato di adattamento che implementi il modello (runtime support library).
 

@@ -1,8 +1,15 @@
-## Introduzione al C++
+# Introduzione al C++
+
+- [Introduzione al C++](#Introduzione-al-C)
+  - [Tipi base e derivati](#Tipi-base-e-derivati)
+  - [Classi](#Classi)
+  - [Costruttore di copia](#Costruttore-di-copia)
+  - [Distruttore](#Distruttore)
 
 Linguaggio vasto e articolaro che è compatibile con il C, ma ha estensioni esoteriche e uniche, per garantire espressività senza penalizzare prestazioni.
 
 Obiettivi:
+
 - Astrazione a costo nullo
 - Espressività (UDT - User Defined Type) devono possedere la stessa espressività offerto dai tipi base del linguaggio
 - Sostituzione: usare un UDT ovunque sia utilizzabile un tipo base.
@@ -10,7 +17,8 @@ Obiettivi:
 Offre incapsulamento, Composizione, Ereditarietà e Polimorfismo. Programmazione Generica, Strutturata e Funzionale.
 
 ## Tipi base e derivati
-- Riferimenti
+
+- Riferimenti: puntatore inizializzato e automaticamente dereferenziato
 
 ```c++
 int i = 0;
@@ -37,6 +45,8 @@ Definirla con `#ifndef`
  `CBuffer(CBuffer&& source);`
 && RValue reference
 Questa volta non è const poichè lo modifico. Non viene fatto di base dal compilatore, ma deve essere implementato.
+
+Occorre fare in modo che la chiamata al distruttore non elimini le risorse spostate, per questo motivo si deve modificare l'originale.
 
 ## Distruttore
 
