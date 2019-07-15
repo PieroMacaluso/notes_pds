@@ -48,7 +48,6 @@ Impostazione `.gdbinit`
 
 Alloco memoria nello stack e vado a salvare i registri (switchframe)
 
-
 processo
 
 Il processo nella configurazione attuale non ha la lista dei thread, ma ogni thread ha il puntatore al processo.
@@ -206,7 +205,6 @@ Finchè sono in waiting e la chiave è uguale a 1. Nella sezione critica vado a 
 ### Atomic Variables
 
 L'incremento o in generale l'aggiornamento deve essere atomico.
-
 
 ## Mutex Locks
 
