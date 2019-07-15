@@ -1,5 +1,16 @@
 # Piattaforme di esecuzione
 
+- [Piattaforme di esecuzione](#Piattaforme-di-esecuzione)
+  - [API - Application Programming Interface](#API---Application-Programming-Interface)
+  - [ABI - Application Binary Interface](#ABI---Application-Binary-Interface)
+  - [Gestione degli Errori](#Gestione-degli-Errori)
+    - [Windows](#Windows)
+    - [Linux](#Linux)
+  - [Uso delle stringhe](#Uso-delle-stringhe)
+    - [Windows](#Windows-1)
+    - [Linux](#Linux-1)
+  - [Standard POSIX](#Standard-POSIX)
+
 L'esecuzione di una applicazione avviene in un contesto di Sistema Operativo, offrendo servizi, funzionalità e convenzioni che permettono il funzionamento.
 Tali servizi devono perciò conformarsi alle specifiche dell'OS.
 
@@ -9,7 +20,7 @@ Insieme di funzioni e strutture che vengono proposte così come sono al programm
 
 ## ABI - Application Binary Interface
 
-Definisce quale formato debba avere il software per poter essere compatibile con l'OS. Comprende ad esempio come si passano i parametri, come vengono utilizzati i registri del processore, innalzamento del privilegio, ...
+Definisce quale formato debba avere il software per poter essere compatibile con l'OS. Comprende ad esempio come si passano i parametri, come vengono utilizzati i registri del processore, innalzamento del privilegio, collegamento tra moduli.
 
 E' supportata da Compilatore, Linker, Debugger, Profiler e Inspector.
 
@@ -33,7 +44,7 @@ Si può accedere al valore effettivo della variabile con `#define errno(*__errno
 
 ## Uso delle stringhe
 
-8 bit è inadatto per rappresentare tutti i caratteri dell'alfabeto. 
+8 bit è inadatto per rappresentare tutti i caratteri dell'alfabeto.
 
 Il consorzio Unicode ha poi definito degli standard che richiede almeno 21 bit. Possono avere ordinamenti differenti (Big endian, Little endian).
 
