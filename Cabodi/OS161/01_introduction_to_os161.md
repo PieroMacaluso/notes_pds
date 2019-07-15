@@ -81,3 +81,135 @@ In Linux si vuole fare in modo che il kernel possa mettere mano alle sezioni di 
 L'address apce in DUMB_VM vengono gestiti due segmenti e uno stack.
 
 Per poter avviare un programma vengono utilizzati i file ELF che sono costituiti da header (dimensione dati e codice).
+
+## MEMORIA
+
+> SLIDE annotations memory
+
+## Tool di sincronizzazione
+
+Concorrente (parallelismo basato sul tempo).
+
+Problemi:
+
+- Race Conditions
+- Deadlocks
+- Resource starvation
+
+Le soluzioni sono:
+
+- Locks
+- Barriere
+- Semafori
+
+La sezione critica è il pezzo di codice e di dati a cui bisogna fare attenzione, che non può essere eseguita da un processo/thread nello stesso momento.
+
+Si risolve con:
+
+- Mutua Esclusione
+- Progress
+- Bounded Wait
+
+Ci possono essere due approcci per realizzare le primitive:
+
+- Preemptive: Si può essere interrotti
+- Non-preemptive: Non si può essere interrotti (meno problemi di race conditions).
+
+## Algoritmo di Peterson
+
+Assumendo load e store atomiche. Abbiamo una variabile `turn` e un vettore di boolean `flag[2]`.
+
+```c
+while(true){
+    flag[i] = true;
+    turn = j;
+    while(flag[j] && turn ==j);
+    /* Critical */
+    flag[i] = false;
+    /* Remainder Section */
+}
+```
+
+Si può dimostrare che questo funzioni.
+
+Ma in realtà il processore può andare a riordinare le operazioni e questo potrebbe portare le assegnazioni a fare un riordino speculativo.
+
+La soluzione è di inventarci un LOCK, non bastano la scrittura di variabili.
+
+Ma cosa succede se non ho il lock?
+
+- Continuo a provare con spin o busy wait
+- Concedo il processore, ma qualcuno dovrà svegliarmi.
+
+L'implementazione ha bisogno di un supporto hardware.
+
+Nel modello a singolo processore si possono rimuovere gli interrupt, ma le soluzioni più serie sono operazioni istruzioni HW, Barriere di memoria o variabili atomiche.
+
+### Memory Barriers
+
+Se le operazioni di scrittura e lettura vengono fatte non vengono ordinate. Deve essere propagato a tutti i processori prima che a questa vi si possa accedere.
+
+### Istruzioni atomiche
+
+#### Test-and-Set
+
+```c
+boolean test_and_set (boolean *target){
+    boolean rv = *target
+    *target = true;
+    return rv;
+}
+```
+
+Deve essere necessariamente atomica, se abbiamo questo allora:
+
+```c
+lock = false;
+
+do {
+    while(test_and_set(&lock));
+    /* Critical */
+    lock = false;
+
+    /* Remainder */
+} while (true)
+```
+
+#### Compare-and-Swap
+
+```c
+int compare_and_swap(int *value, int expected, int new_value)  {
+    int temp = *value;
+
+    if (*value == expected)
+        *value = new_value;
+    return temp;
+}
+```
+
+```c
+lock = 0;
+
+while (true) {
+    while(compare_and_swap(&lock, 0, 1));
+    /* Critical */
+    lock = 0;
+
+    /* Remainder */
+}
+```
+
+### Bounded Waiting
+
+Finchè sono in waiting e la chiave è uguale a 1. Nella sezione critica vado a calcolare il primo waiting dopo di me.
+
+### Atomic Variables
+
+L'incremento o in generale l'aggiornamento deve essere atomico.
+
+
+## Mutex Locks
+
+E' il tipo di dato più semplice che ci garantisce una protezione della sezione critica., ma la soluzione che richiede busy waiting è lo SPIN LOCK, semplice, ma bisogna limitarne l'uso perchè lo spin lock continua a girare.
+
+TestAndTestAndSet è migliore perchè riduce leggermente il busy waiting.
