@@ -10,6 +10,7 @@ Il programma originale viene trasformato in un nuovo programma con un modello di
 ## Librerie di esecuzione
 
 Offrono meccanismi di base attraverso funzioni:
+
 - Visibili e con funzionalità standard
 - Invisibili al programmatore che sono inserite in fase di compilazione per dupportare l'esecuzione.
 
@@ -20,9 +21,9 @@ I programmi sono pensati come se fossero unici (isolamento). Assume di poter acc
 L'esecuzione è principalmente sequenziali e senza limitazioni.
 Possiedono un flusso di esecuzione e una struttura a pila per gestire le funzioni annidate tra le funzioni.
 
-
 ## Concorrenza
-A partire dal 2011 irca un programma può attivare ulteriori flussi di esecuzione.
+
+A partire dal 2011 circa un programma può attivare ulteriori flussi di esecuzione.
 
 ## Processi
 
@@ -30,7 +31,9 @@ La libreria di esecuzione non può da sola implementare tutte le astrazioni del 
 
 Per sopperire a questo vengono usati i **processi**. Un processo è il contesto di esecuzione di un programma. Il sistema sovrintende la creazione dei processi.
 
-Quando un processo viene selezionato per essere eseguito, l'OS configura il processore con le relative risorse, ma serve un supporto HW per distinguere le due modalità di esecuzione:
+Quando un processo viene selezionato per essere eseguito, l'OS configura il processore con le relative risorse, ma serve un supporto.
+
+L'OS richiede un supporto HW per distinguere le due modalità di esecuzione:
 
 - Modalità utente: sottoinsieme
 - Modalità supervisore: illimitate funzioni basate su memoria e risorse, periferiche, FS e rete.
@@ -54,7 +57,7 @@ Fasi:
 - Caricamento librerie
 - Avvio esecuzione
 
-Lo Spazio di indirizzamento permetter a due processi di avere una memoria contigua che appare identica ai due processori, ma sono mappate in posti diversi. (grazie MMU).
+Lo Spazio di indirizzamento permette a due processi di avere una memoria contigua che appare identica ai due processori, ma sono mappate in posti diversi. (grazie MMU).
 
 ***See slides 21, 22***
 
