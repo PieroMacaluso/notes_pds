@@ -1,5 +1,23 @@
 # STL
 
+- [STL](#STL)
+  - [I/O](#IO)
+    - [Manipolatori `<iomanip>`](#Manipolatori-iomanip)
+  - [Standard Template Library](#Standard-Template-Library)
+    - [Container](#Container)
+      - [Sequenziali](#Sequenziali)
+      - [Associativi](#Associativi)
+      - [Adapter](#Adapter)
+      - [Interfacce Comuni](#Interfacce-Comuni)
+      - [Container Adaptor](#Container-Adaptor)
+    - [Algoritmi](#Algoritmi)
+        - [Algoritmi non modificanti](#Algoritmi-non-modificanti)
+        - [Algoritmi non modificanti](#Algoritmi-non-modificanti-1)
+        - [Algoritmi per il partizionamento](#Algoritmi-per-il-partizionamento)
+        - [Algoritmi per l'ordinamento](#Algoritmi-per-lordinamento)
+        - [Algoritmi per ricerca binaria](#Algoritmi-per-ricerca-binaria)
+      - [Execution Policy](#Execution-Policy)
+
 ## I/O
 
 Possono essere utilizzate le funzioni di C, ma possono trattare solo i tipi semplici. Ci viene fornita da C++ una struttura con complessa ereditarietà e polimorfismo che parte da `ios`
@@ -33,6 +51,7 @@ Metodo più furbo `readLine()`;
 Le operazioni di I/O non sollevano eccezioni, il programmatore deve andare a controllare il risultato.
 
 Per testare gli indicatori andiamo ad utilizzare:
+
 - `eof()`
 - `fail()` irrecuperabile
 - `bad()` errore che causa perdita dei dati
@@ -58,18 +77,20 @@ L'uso della STL permette di semplificare la manutenzione del codice. Impatto min
 
 #### Sequenziali
 
-
 `array` (fissa), `vector` (dinamica), `deque`(testa e coda), `list` (liste linkate), `forward_list` (linkate semplicemente, solo forward)
 
 - Gli array sono allocati in maniera costante. Diventa staticamente polimorfico che mi permette di poter utilizzare gli algoritmi. Questi non sono riallocabili. Non si hanno metodi di delete. Possono essere ritornati come parametri di una funzione.
+Accesso casuale a tempo costante.
 
 - I vector sono array allocati dinamicamente. I vettori hanno una capacità che è diverso dalla dimensione. Una `std::string` equivale di fatto a `std::vector<char>`, ma non fa parte dei contenitori della STL.
 
 #### Associativi
 
 - ordinati: `set`, `map`, `multiset`, `multimap`
-  - La chiave deve implementare operator<
+  - La chiave deve implementare operator<, ordinabile, copiabile e movibile.
 - non ordinati: `unordered_set`, `unordered_map`, `unordered_multiset`, `unordered_multimap`
+  - La chiave deve essere equal comparable, copiabile o movibile,disponibile come hash.
+  - Si basano sull'uso di `pair<t1, t2>` che devono essere Assignable, ovvero copiabile e riassegnabile.
 
 Iteratori inclusi tra `.begin` e `.end()`.
 
@@ -105,6 +126,8 @@ Swap
 Compare, è possibile andarli a comparare. Per quanto riguarda i container associativi non ordinati abbiamo solo gli operatori di uguaglianza.
 
 Un iteratore è una generalizzazione dei puntatori. Questo permette l'applicazione degli stessi a differenti container andando a definire le diverse incrementazioni.
+
+Iteratori possono essere `forward iterator`, `bidirectional iterator`, `random access iterator`.
 
 Esistono anche le versioni di iteratori scritte come iteratori.
 
