@@ -1,5 +1,15 @@
 # Programmazione Concorrente
 
+- [Programmazione Concorrente](#Programmazione-Concorrente)
+  - [Generalità sulla programmazione concorrente](#Generalit%C3%A0-sulla-programmazione-concorrente)
+    - [Vantaggi](#Vantaggi)
+    - [Svantaggi](#Svantaggi)
+  - [Complessità](#Complessit%C3%A0)
+  - [Modello di memoria del C++](#Modello-di-memoria-del-C)
+  - [Problemi aperti](#Problemi-aperti)
+    - [Errori](#Errori)
+  - [Interferenza](#Interferenza)
+
 > Thread nativi Windows e Linux non saranno trattati pocihè ci concentreremo sull'implementazione fornita da C++. Ci nasconde i dettagli esterni proponendoci un'interfaccia astratta.
 
 ## Generalità sulla programmazione concorrente
@@ -16,9 +26,8 @@ I vantaggi della concorrenza sono:
 
 - Sovrapposizione tra computazione e operazioni di I/O;
 - Riduzione sovraccarico dovuto alla comunicazione dei processi;
-  - Esempio: i puntatori non potevano essere passati da un processo all'altro poichè possedevano spazi di indirizzamento diversi. Questo necessita di una modalità che fosse indipendente dallo spazio di memoria andando a creare un grosso overhead. Due thread che condividono lo stesso processo possono passarsi in maniera più facile i dati. 
+  - Esempio: i puntatori non potevano essere passati da un processo all'altro poichè possedevano spazi di indirizzamento diversi. Questo necessita di una modalità che fosse indipendente dallo spazio di memoria andando a creare un grosso overhead. Due thread che condividono lo stesso processo possono passarsi in maniera più facile i dati.
 - Utilizzo di CPU multicore permette di fare un vero parallelismo riducendo il tempo di elaborazione.
-
 
 ### Svantaggi
 
@@ -37,7 +46,7 @@ Scrivere un programma concorrente ha un approccio molto più vicino alla dimostr
 
 Quando un thread legge il contenuto di una locazione di memoria potrebbe trovare:
 
--  Il valore iniziale contenuto nell'eseguibile mappato in memoria
+- Il valore iniziale contenuto nell'eseguibile mappato in memoria
 - Il valore che lo stesso thread ha depositato all'interno della locazione precedentemente.
 - Valore lasciato da un altro thread.
 
@@ -70,9 +79,9 @@ I thread condividono:
 
 Se più thread sono in esecuzione non è possibile fare assunzioni sulle velocità relative di avanzamento. L'esecuzione ripetuta può portare a risultati diversi.
 
-
 ## Interferenza
 
+L'interferenza è un fenomeno che si manifesta con malfunzionamenti completamente casuali dovuti ad accessi simultanei di thread al medesimo dato senza alcun tipo di ptoezione.
 
 Libreria C++ `#include <thread>`.
 

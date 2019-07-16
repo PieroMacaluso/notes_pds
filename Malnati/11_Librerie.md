@@ -1,5 +1,9 @@
 # Librerie
 
+- [Librerie](#Librerie)
+  - [Librerie a collegamento statico](#Librerie-a-collegamento-statico)
+    - [Librerie a collegamento dinamico](#Librerie-a-collegamento-dinamico)
+
 Quando realizziamo un programma questo è un insieme di sorgenti ognuno compilato in maniera separata. I file header permettono di dichiarare simboli definiti esternamente.
 
 Il compilatore produce moduli oggetto. In una compilation unit possono rimanere dei buchi che possono essere riempiti durante la fase di linking.
@@ -11,10 +15,12 @@ Le librerie ci permettono di avere moduli oggetto archiviari in un file per evit
 Le librerie contengono le variabili e le funzioni esportate (globali), quelle private che sono accessibili solo all'interno della libreria, ma anche costanti e altre risorse.
 
 L'uso di una librerie richiede due fasi:
+
 - Identificazione dei moduli necessari e il loro caricamento in memoria
 - Aggiornamento degli indirizzi per puntare correttamente ai moduli caricati.
 
 Le due operazioni possono essere fatte in due modi diversi:
+
 - Durante il collegamento (linker), ovvero collegamento statico.
 - Possiamo rimandare la fase del caricamento dei moduli al loader, ovvero al caricamento del programma. Guarda nella import table e vede cosa manca. Però potrebbe succedere che non ci sia, se non la trova non funziona più. (Windows `.dll`, Linux `.so`).
 - Può anche avvenire durante l'esecuzione e il programma stesso potrà decidere lui quando avrà la necessità. (esempio Plug-in)
@@ -37,6 +43,7 @@ Il linker identifica in quali moduli della libreria si trovano le funzioni richi
 - Non ci sono dubbi sulla versione della libreria utilizzata
 
 **Svantaggi**:
+
 - Gli stessi contenuti sono presenti in processi differenti, bassa efficienza
 - L'uso delle librerie statiche comporta una riduzione della modularità del codice. Ogni applicazione che ne fa uso porta a una ricompilazione.
 
