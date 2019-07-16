@@ -46,6 +46,7 @@ CBuffer& operator=(const CBuffer& source) {
 IL COSTRUTTORE DI COPIA E DI ASSEGNAZIONE DEVONO ESSERE SEMANTICAMENTE EQUIVALENTI.
 
 ## Regola dei tre
+
 Se si implementa uno di questi tre sarà necessario fare gli altri due!
 
 - Costruttore di Copia
