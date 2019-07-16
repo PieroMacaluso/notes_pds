@@ -1,5 +1,8 @@
 # Funzioni e operatori
 
+- [Funzioni e operatori](#Funzioni-e-operatori)
+  - [Puntatori a funzione](#Puntatori-a-funzione)
+
 Operator overloading, almeno uno dei due operandi deve essere una UDT.
 
 Operatori di conversione
@@ -32,7 +35,7 @@ Se si ha una sola istruzione di return il valore si può inferire, altrimenti bi
 
 Le parentesi quadre sono le variabili che vengono catturate per valore, per riferimento, per catturare tutto `[&]`.
 
-Una lambda che cattura dei valori viene chiamata chiusura. I valori catturati non possono essere modificai a meno che non venga indicata la parola chiave "mutable".
+Una lambda che cattura dei valori viene chiamata chiusura. I valori catturati non possono essere modificati a meno che non venga indicata la parola chiave "mutable".
 
 `std::function<R(Args...)>`
 
@@ -41,3 +44,5 @@ std::function<int(int)> makeFunction(int k){
     return [k](int i) { return k*i; };
 }
 ```
+
+Il meccanismo di `std::function` si basa sul polimorfismo, per questo motivo richiede più complessità, poichè bisogna passare dalla V-Table.

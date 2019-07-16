@@ -1,13 +1,23 @@
 # Programmazione Generica
 
+- [Programmazione Generica](#Programmazione-Generica)
+  - [Template](#Template)
+    - [Classe Generica](#Classe-Generica)
+  - [Smart Pointer](#Smart-Pointer)
+    - [Ownership-Handling](#Ownership-Handling)
+  - [`std::unique_ptr<BaseType>`](#stduniqueptrBaseType)
+  - [`std::shared_ptr<BaseType>`](#stdsharedptrBaseType)
+    - [Polimorfismo](#Polimorfismo)
+
 ## Template
+
 Molto spesso un tipo di programmazione stringente permette di avere un sistema robusto e per non andare a violare il sistema di tipi si va a replicare una grande quantità di codice. Il C++ supporta il concetto di **Template**.
 
-Un **template** è un frammento parametrico che viene espanso in ffase di compilazione in base al relativo utilizzo. Mantiene perciò la robustezza di un sistema *strong-typed*.
+Un **template** è un frammento parametrico che viene espanso in fase di compilazione in base al relativo utilizzo. Mantiene perciò la robustezza di un sistema *strong-typed*.
 
 Il template è la chiave di volta per la programmazione generica. Permette di creare polimorfismo statico, cioè eseguito in fase di compilazione senza andare a usare metodi virtuali e V-table.
 
-La parte principale della libreria standard è basata su Template
+La parte principale della libreria standard è basata su Template.
 
 ```c++
 template <typename T>
@@ -41,28 +51,31 @@ Accum<int> ia(0);
 
 Quando il compilatore incontra il template va a creare un albero sintattico astratto (AST), ma nel momento in cui incontra i frammenti di codice in cui è specificato come viene usato: a quel punto va a produrre le funzioni relative se non sono già state compilate in precedenza.
 
-I parametri del template possono essere di tipo di dato o valori costanti. 
+I parametri del template possono essere di tipo di dato o valori costanti.
 
 Se si crea una classe generica è necessario che la sua definizione appaia nella stessa unità di traduzione (no separazione `.cpp` e `.h`). Quasi sempre si implementa tutto nell'header.
 
-Alcuni tipi potrebbero non essere utilizzabili per assunzioni non corrette. La prima soluzione è scegliere una strada diversa oppure si può andare a modificare e specializzare il template. Esempio slide 15.
+Alcuni tipi potrebbero non essere utilizzabili per assunzioni non corrette. La prima soluzione è scegliere una strada diversa modificando la classe oppure si può andare a modificare e specializzare il template. Esempio slide 15.
 
 **Punti di forze**:
+
 - Aumentano le possibilità espressive
-  - Non pregiudica tempi esecuzione
-  - Risparmiamo tempo
-  - Non mettono a rischio i tipi
-  - Flessibilità per futuri miglioramenti
+- Non pregiudica tempi esecuzione
+- Risparmiamo tempo
+- Non mettono a rischio i tipi
+- Flessibilità per futuri miglioramenti
 
 **Punti di attenzione**:
+
 - Chi usa un template deve verificarne le assunzioni sui tipi da utilizzare.
 - Le violazioni portano ad errori di compilazione.
 - Spesso non occorre scrivere nuovi template
 
-# Smart Pointer
+## Smart Pointer
 
 La ridefinizione degli operatori ci permette di dare una semantica alle operazioni `*` e `->`.
 E' possibile costruire oggetti che sembrano puntatori, ma hanno altre caratteristiche:
+
 - Garanzia di inizializzazione e rilascio
 - Conteggio riferimenti
 - Accesso controllato
@@ -72,7 +85,7 @@ Possono anche essere ridefinite le operazioni.
 Esempio di implementazione di un wrapper per puntatore.
 
 > Non è una buona classe perchè possiamo inserire un int i su heap con casini.
-> 
+
 ```c++
 class int_ptr {
     int* ptr;
@@ -94,18 +107,20 @@ Ma a chi appartiene la memoria di uno smart_pointer? Non abbiamo implementato il
 - Condivisione con conteggio dei riferimenti (`shared_ptr`), il puntatore viene liberato quando muoiono tutti i riferimenti.
 - Condivisione in lettura e duplicazione in scrittura
 
-## Ownership-Handling
+### Ownership-Handling
+
 Unico utilizzatore o eliminato dall'ultimo utilizzatore
 
 La libreria che usiamo è `#include <memory>`
 
-- `std::unique_ptr<BaseType>` impedisce la copia, ma permette il trasferimento
-- `std::shared_ptr<BaseType>` condivisibile
+- `std::unique_ptr<BaseType>` impedisce la copia, ma permette il trasferimento.
+- `std::shared_ptr<BaseType>` condivisibile attraverso un meccanismo di conteggio dei riferimenti.
 - `std::weak_ptr<BaseType>` legata allo shared ma non partecipa al conteggio
 
 ## `std::unique_ptr<BaseType>`
 
-Attenzione agli array.
+Può essere solo trasferito esplicitamente ad un altro `unique_ptr` attraverso la funzione `std::move()`
+Attenzione agli array (`unique_ptr<T[]>`).
 `.reset()` ci permette di rilasciare la memoria.
 
 ## `std::shared_ptr<BaseType>`
@@ -117,16 +132,20 @@ Alloca più memoria, ma permette di condividere un puntatore. Il puntatore punta
 
 la funzione `make_shared<BaseType>(params...)` ci permette di creare un'istanza e restituire il puntatore shared. Garantisce la contiguità dei blocchi.
 
+Il blocco di controllo mantiene distruttore, allocatore, contatore shared_ptr e contatore weak_ptr.
+
 **SLIDE 38**
+
+Ogni `shared_ptr` contiene al proprio interno un puntatore al dato e un puntatore al blocco di controllo. La dimensione dello smart pointer raddoppia.
 
 ### Polimorfismo
 
 Data una classe D che eredita in modo pubblico da B, un puntatore ad una classe derivata D è anche un puntatore di B.
 
-- `std::sharedptr<T>static_pointer_cast<T>(shared_ptr<U>)`
-- `std::sharedptr<T>dynamicc_pointer_cast<T>(shared_ptr<U>)`
+- `std::sharedptr<T> static_pointer_cast<T>(shared_ptr<U>)`
+- `std::sharedptr<T> dynamic_pointer_cast<T>(shared_ptr<U>)`
 - ...
 
-Molto spesso ci ritroviamo nella situazione di avere una dipendenza ciclica che manderebbe in crisi il conteggio dei puntatori, per poter risolvere questa faccenda possiamo andare ad utilizzare `std::weak_ptr<BaseType>`.
+Molto spesso ci ritroviamo nella situazione di avere una dipendenza ciclica che manderebbe in crisi il conteggio dei puntatori, per poter risolvere questa faccenda possiamo andare ad utilizzare `std::weak_ptr<BaseType>`. Quest'ultimo mantiene un riferimento dbole al blocco custodito da shared_ptr.
 
-Se io vado a fare una lock su un `weak_ptr` si andrà a restituire un `shared_ptr` (dobbiamo controllare che lo shared sia vivo).
+Se io vado a fare una `.lock()` su un `weak_ptr` si andrà a restituire un `shared_ptr` (dobbiamo controllare che lo shared sia vivo con `.expired()`).
