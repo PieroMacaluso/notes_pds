@@ -5,10 +5,11 @@ I thread sono stati introdotti con C++11 diventandone parte integrante. Nelle ve
 La classe introduce un livello di astrazione per facilitare il programmatore.
 
 Due approcci:
+
 - Alto livello con `std::async` e `std::future`
 - Basso livello che chiede l'uso esplicito di thread e costrutti di sincronizzazione.
 
-## Classe thread
+## Classe `std::thread`
 
 Modella un oggetto che rappresenta un singolo thread di esecuzione del sistema operativo.
 
@@ -23,6 +24,7 @@ I parametri passati per riferimento dobbiamo andare a garantire che il parametro
 Spesso vengono utilizzate le funzioni lambda
 
 Se creiamo il thread possiamo:
+
 - `join()` aspettiamo la conclusione
 - `detach()` rinunciamo ad essere interessati a lui
 - traferire per movimento
@@ -43,7 +45,7 @@ Se durante la computazione del thread si verifica un'eccezione non recuperata da
 
 #### Accedere a dati condivisi
 
-In assenza di sincronizzazione si potrebbe avere interferenza. Bisogna fare in modo che questi dati vengano racchiusi in un costrutto di sincronizzazione
+In assenza di sincronizzazione si potrebbe avere interferenza. Bisogna fare in modo che questi dati vengano racchiusi in un costrutto di sincronizzazione.
 
 ## Costrutti di sincronizzazione
 

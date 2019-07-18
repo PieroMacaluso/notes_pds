@@ -10,15 +10,15 @@ Prende come parametro un oggetto chiamabile e poi i parametri. Restituisce un og
 
 La funzione chiamabile potrebbe anche essere preceduto dalla politica di lancio.`std::launch::async` invece fa partire subito il thread secondario, `std::launch::deferred` permette di valutare il risultato solo quando ne abbiamo bisogno. Se la politica viene omessa, la gestione viene fatta dal sistema.
 
-Ma creare un thread secondario ha un costo significativo, se le operazioni sono posche conviene eseguirle direttamente.
+Ma creare un thread secondario ha un costo significativo, se le operazioni sono poche conviene eseguirle direttamente.
 
 ## `std::future<T>`
 
 E' un contenitore che ci permette di fare accesso al dato ritornato da un'operazione asincrona. Mantiene internamente uno stato condiviso con il codice responsabile della produzione del risultato.
 
-E' possibile utilizzare i metodi `wait()` per poter triggerare il completamento o attenderlo nel tempo. `wait_for` e `wait_until` non forzano l'avvio se il task è lanciato con `deffered`.
+E' possibile utilizzare i metodi `wait()` per poter triggerare il completamento o attenderlo nel tempo. `wait_for` e `wait_until` non forzano l'avvio se il task è lanciato con `deferred`.
 
-Il future può essere distrutto solo se viene completato. L'attività inoltra non è cancellabile a meno che non venga rilasciato un sistema per andarla a terminare esplicitamente.
+Il future può essere distrutto solo se viene completato. L'attività inoltre non è cancellabile a meno che non venga rilasciato un sistema per andarla a terminare esplicitamente.
 
 ## `std::shared_future`
 
@@ -26,7 +26,7 @@ Evita data race nell'accesso ad un singolo oggetto da thread multipli. Si può c
 
 ## Differenze tra  `std::thread` e `std::async`
 
-COn thread non abbiamo scelta sulla politica di attivazione. Non abbiamo un sistema di gestione delle eccezioni, ma in async non possiamo avere dati intermedi. 
+Con thread non abbiamo scelta sulla politica di attivazione. Non abbiamo un sistema di gestione delle eccezioni, ma in async non possiamo avere dati intermedi.
 
 ## `std::promise<T>`
 
@@ -35,6 +35,7 @@ Il ponte tra async e future è il `std::promise<T>`. E' un impegno a fornire il 
 Nei thread si deve passare la future e muovere la promise.
 
 ## Thread distaccati
+
 Se il thread distaccato fa accesso a variabili nel main, potrebbe trovarle distrutte.
 Si può usare `std::quick_exit()` per far terminare un programma senza invocare i distruttori delle variabili globali (Può essere un rimedio peggiore del male).
 
@@ -42,14 +43,13 @@ Se il compito dei detached è quello di creare risultati per il thread principal
 
 ## `std::packaged_task<T(Args...)>`
 
-Astrazione di un'attività in grado di produrre un T a partire da Args. QUando un package task viene eseguito, viene invocata la funzione incapsulata e il risultato prodotto viene utilizzato per valorizzare l'oggetto `std::future` associato. 
+Astrazione di un'attività in grado di produrre un T a partire da Args. QUando un package task viene eseguito, viene invocata la funzione incapsulata e il risultato prodotto viene utilizzato per valorizzare l'oggetto `std::future` associato.
 
 Si presta per la realizzazione di un **Thread Pool**. Si può stimare il numero di core disponibili attraverso la funzione: `std::thread::hardware_concurrency()`. Se ci sono funzioni di I/O è meglio andare a generare un sacco di thread rispetto al numero di core.
 
-
 ## Lazy Evaluation
 
-Ci sono varie situazioni in cui è utile rimandare la creazione e inizializzazione delle strutture complesso fino a quando non c'è la certezza del loro utilizzo. Un esempio è un Singleton in cui si va ad inizializzare solo nel momento in cui viene chiamato il primo getInstance(). Ma in un contesto concorrente ci sono molti problemi, poichè entrambi potrebbero creare differenti istanze che si diffondono creando problemi. Servirebbe un mutex che dovrebbe essere globale, quindi problema. Per questo motivo C++ ci propone due strutture che sono la classe `std::once_flag` e la funzione`std::call_once()` che registra se qualcuno la sta già chiamando o meno.
+Ci sono varie situazioni in cui è utile rimandare la creazione e inizializzazione delle strutture complesse fino a quando non c'è la certezza del loro utilizzo. Un esempio è un Singleton in cui si va ad inizializzare solo nel momento in cui viene chiamato il primo getInstance(). Ma in un contesto concorrente ci sono molti problemi, poichè entrambi potrebbero creare differenti istanze che si diffondono creando problemi. Servirebbe un mutex che dovrebbe essere globale, quindi problema. Per questo motivo C++ ci propone due strutture che sono la classe `std::once_flag` e la funzione`std::call_once()` che registra se qualcuno la sta già chiamando o meno.
 
 ### `std::call_once(flag f, ...)`
 

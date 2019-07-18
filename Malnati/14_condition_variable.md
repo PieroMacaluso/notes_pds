@@ -1,6 +1,8 @@
 # Condition Variable C++11
 
-Spesso un thread deve aspettare uno o più risultati intermedi prodotti da altri thread. La coppia promise/future permettono di offrire una soluzione limitata al problema: valida solo per singola cosa, non per sequenze di dati.
+Spesso un thread deve aspettare uno o più risultati intermedi prodotti da altri thread.
+
+La coppia promise/future permettono di offrire una soluzione limitata al problema: valida solo per singola cosa, non per sequenze di dati.
 
 La tecnica del polling ha limiti:
 Consumo calcolo e batteria, ma introduce una latenza che non basta.
@@ -28,4 +30,6 @@ Per proteggerci dalle notifiche spurie possiamo andare a usare una lambda except
 
 **Slide 21**
 
- 
+## Operazioni atomiche
+
+La classe `std::atomic<T>` permette di accedere in modo atomico all'oggetto di tipo T attraverso funzioni tipo `load()` e `store()`, ma anche operazioni di incremento.
