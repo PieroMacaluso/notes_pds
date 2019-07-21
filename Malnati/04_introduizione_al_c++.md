@@ -4,6 +4,7 @@
   - [Tipi base e derivati](#Tipi-base-e-derivati)
   - [Classi](#Classi)
   - [Costruttore di copia](#Costruttore-di-copia)
+  - [Costruttore di Movimento](#Costruttore-di-Movimento)
   - [Distruttore](#Distruttore)
 
 Linguaggio vasto e articolaro che è compatibile con il C, ma ha estensioni esoteriche e uniche, per garantire espressività senza penalizzare prestazioni.
@@ -35,21 +36,20 @@ Definirla con `#ifndef`
 `CBuffer globalBuffer2 { 32 };`
 
 ## Costruttore di copia
- Mi dai un costruttore in cui mi fai partire da un oggetto che esiste già e mi indichi in un solo punto come copiarlo.
 
- `CBuffer(const CBuffer& source);`
+Costruttore che riceve come parametro un riferimento all'oggetto da copiare. e.g. `CBuffer(const CBuffer& source);`
+In assenza di specifiche da parte del programmatore questo viene implementato in maniera automatica dal compilatore. Per questo motivo se fosse necessario evitare che possa essere fatta una copia dell'oggetto si deve andare a impostare il metodo in questo modo: `CBuffer::CBuffer(const CBuffer& source) = delete;`
 
- Per far sì che vanga vietata la copia di un oggetto possiamo andare a generarlo privato oppure  `CBuffer::CBuffer(const CBuffer& source) = delete;`
+## Costruttore di Movimento
 
- ## Movimento
+Costruttore che riceve come parametro un riferimento RValue indicato con `&&`. Il costruttore di occuperà di costruire il nuovo oggetto modificando la sorgente. I puntatori vengono semplicemente copiati avendo cura di settare quelli dalle `source` a null, onde evitare che vengano liberate le porzioni di memoria appena mosse.
+
  `CBuffer(CBuffer&& source);`
-&& RValue reference
+
 Questa volta non è const poichè lo modifico. Non viene fatto di base dal compilatore, ma deve essere implementato.
 
-Occorre fare in modo che la chiamata al distruttore non elimini le risorse spostate, per questo motivo si deve modificare l'originale.
+Per il movimento ci si appoggia alla funzione `std::move(...)` che possiamo considerare come una sorta di cast a RValue Reference.
 
 ## Distruttore
 
-Non ha mai parametri e non deve mai essere chiamato, solo il compilatore lo chiama. E' il testamento dell'oggetto.
-
-Allocazioni dinamiche con new
+Non ha mai parametri e non deve mai essere chiamato, solo il compilatore lo chiama. E' il testamento dell'oggetto che racchiude la liberazione di tutte le strutture di memoria dinamiche.

@@ -2,7 +2,7 @@
 
 - [Introduzione al C++](#Introduzione-al-C)
   - [Passaggio dei parametri](#Passaggio-dei-parametri)
-  - [Copia e Assegnazione](#Copia-e-Assegnazione)
+  - [Assegnazione per copia](#Assegnazione-per-copia)
   - [Regola dei tre](#Regola-dei-tre)
   - [Assegnazione per movimento](#Assegnazione-per-movimento)
   - [Paradigma Copy&Swap](#Paradigma-CopySwap)
@@ -20,14 +20,11 @@ Si passano per valore tutte quelle cose che hanno un costo basso, per riferiment
 Trasferimento di proprietà: `std::move(data)` come parametro.
 Per restituire più parametri in uscita possiamo usare le tuple. `std::tuple<T, A>`, per farla `std::make_tuple()`
 
-## Copia e Assegnazione
+## Assegnazione per copia
 
-***See Slide 39***
+L'assegnazione per copia viene implementata di base dal compilatore, ma questa, in assenza di ulteriori specifiche, si limita a fare la copia bruta . Questo può creare leakage e puntano entrambi alla stessa porzione di memoria.
 
-In assegna di ulteriori comunicazioni l'assegnazione si limita a fare la copia bruta . Questo può creare leakage e puntano entrambi alla stessa porzione di memoria.
-***See Slide 43***
-
-Si può andare a ridefinire l'assegnazione `CBuffer& operator=(const CBuffer& source);` Distrugge l'oggetto su cui andiamo a copiare
+Si può andare a ridefinire l'assegnazione `CBuffer& operator=(const CBuffer& source);` Distrugge l'oggetto su cui andiamo a copiare.
 
 ```c++
 CBuffer& operator=(const CBuffer& source) {
@@ -43,7 +40,7 @@ CBuffer& operator=(const CBuffer& source) {
 }
 ```
 
-IL COSTRUTTORE DI COPIA E DI ASSEGNAZIONE DEVONO ESSERE SEMANTICAMENTE EQUIVALENTI.
+**IL COSTRUTTORE DI COPIA E DI ASSEGNAZIONE DEVONO ESSERE SEMANTICAMENTE EQUIVALENTI.**
 
 ## Regola dei tre
 
@@ -54,6 +51,8 @@ Se si implementa uno di questi tre sarà necessario fare gli altri due!
 - Distruttore
 
 ## Assegnazione per movimento
+
+Questo tipo di assegnazione riceve come parametro di ingresso un riferimento RValue che verrà "smontato" e i cui elementi verranno assegani ad un nuovo oggetto. Anche in questo caso è sempre importante andare a contrassegnare come null i puntatori di `source` per evitare distruzioni di variabili indesiderate.
 
 ```c++
 CBuffer& operator=(const CBuffer&& source) {
@@ -70,7 +69,7 @@ CBuffer& operator=(const CBuffer&& source) {
 
 ## Paradigma Copy&Swap
 
-Possiamo ridurre tutte le prblematiche andando a definire una funzione **`friend`**, può accedere alle mie variabili private.
+Possiamo ridurre tutte le problematiche andando a definire una funzione **`friend`**, ovvero che può accedere alle variabili private, assieme alla funzione `std::swap()`.
 
 ```c++
 friend void swap (intArray& a, intArray& b) {
@@ -82,7 +81,6 @@ intArray& operator=(intArray that) {
     swap(*this, that);
     return *this;
 }
-
 
 intArray(intArray&& that): mSize(0), mArray(nullptr) {
     swap(*this, that);

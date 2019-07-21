@@ -1,6 +1,7 @@
 # IPC
 
 L'uso di thread permette di sfruttare le risorse computazionali presenti nell'elaboratore, ma ci sono situazioni in cui la presenza di un singolo spazio di indirizzamento non è possibile o desiderabile.
+
 - Riuso di programmi esistenti
 - Scalabilità su più computer
 - Sicurezza (TAB Chrome)
@@ -47,6 +48,7 @@ Internamente si può usare una varietà di rappresentazione che non è adatta ad
 La rappresentazione esterna è un formato intermedio che permette la rappresentazione di struttura dati arbitrarie sostituendo i puntatori con riferimenti indipendenti.
 
 Due strade grossolane:
+
 - Formati basati su testo (XML, JSON, CSV)
   - Vantaggio è che sono debuggabili
   - Svantaggio: è inefficient
@@ -80,7 +82,7 @@ I canali creati da SO sono creati su richiesta dei singoli processi. Vengono ass
 
 ### Scelta del meccanismo
 
-- Relazione tra i processi 
+- Relazione tra i processi
   - Dipendenza Esplicita
   - Nessuna dipendenza
 - Tipo di comunicazione
@@ -91,46 +93,50 @@ I canali creati da SO sono creati su richiesta dei singoli processi. Vengono ass
 
 # IPC in Windows
 
-Sincronizzazione processi e comunicazioni specifiche
+La piattaforma Win32 offre una ricca serie di meccanismi di sincronizzazione che si basano su oggetti kernel condivisi.
+Tutte le tecniche sono più generali, ma meno efficienti e si basano sull'attesa.
 
 `WaitForSingleObject()` o `WaitForMultipleObject()` con semantica particolare (tutto nulla).
 
-Ogni oggetto definisce le proprie politiche di attesa e risveglio.
+Ogni oggetto definisce le proprie politiche di attesa e risveglio. e può trovarsi in due stati differenti: Segnalato e Non Segnalato. Gli oggetti di sincronizzazione possono alternare i due stati di segnalazione.
 
 ## Eventi
 
-VOrrebbe assomigliare alle condition variable. Aspettiamo fino a quando l'evento scatta.
-Auto-reset event che tornano false appena qualcuno si risveglia, oppure manual-reset event.
+Sono oggetti kernel che modellano il verificarsi di una condizione.
+
+Vorrebbe assomigliare alle condition variable. Aspettiamo fino a quando l'evento scatta.
+Auto-reset event che tornano false appena qualcuno si risveglia, oppure manual-reset event che rimanfono a true fino a quando non viene chiamato il reset.
 
 `CreateEvent(...)` se ne indico uno già esistente mi lego.
-`OpenEvent(...)`
+`OpenEvent(...)` mi collego ad uno esistente.
+
+I processi condividono l'evento tramite il nome.
 
 `SetEvent(...)` Da false a true
-`ResetEvent(...)` tutto a flase
+`ResetEvent(...)` tutto a false
 `PulseEvent(...)` una sorta di notify che non ha ascoltatori.
 
 ## Semafori
 
 `ReleaseSemafore(...)` incrementa semaforo
-`WaitForSingleObject(...)` prova a decrementare.
+`WaitForSingleObject(...)` prova a decrementare, altrimenti si blocca e resta in attesa.
 
 ## Mutex
 
-Oggetti kernel di WIndows. Funzionano anche tra processi differenti.
+Oggetti kernel di WIndows. Funzionano anche tra processi differenti. COnservano ID del thread e un contatore.
 
-`CreateMutex`, `OpenMutex`, `ReleaseMutex`
+`CreateMutex`, `OpenMutex`
+`ReleaseMutex` se arriva a zero segnala il mutex.
 
 Molto spesso è utile tenere una o più primitive. Si può usare un mutex per regolare l'accesso a due o più eventi per indicare il completamento delle operazioni. Questo è per evitare DeadLock.
 
 ## MailSlot
 
-Code di messaggi dove ogni processo può depositare un messaggio. Un processo può essere mailslot client e mailslot server.
+Code di messaggi asincrone dove ogni processo può depositare un messaggio. Un processo può essere mailslot client e mailslot server.
 
 Il messaggio viene conservato finchè non viene letto
 
 `GetMailslotInfo`
-
-## Rilascio delle risorse
 
 `CloseHandle()`
 
@@ -146,6 +152,10 @@ Efficiente tra 2 processi parenti
 
 Possono essere bidirezionali. I messaggi non sono segmentati, quindi si possono mandare dei blocchi.
 
+Possiamo avere la modalità di lettura con stream di byte o messaggi.
+
+Scegliamo anche quella che è la modalità di attesa che può essere bloccante (attesa fine processi indefinita) o non bloccante (ritorna situazioni con attesa infinita.).
+
 ## File Mapping
 
 Nel mio processo voglio uno spazio che può essere letto o modificato anche da altri . Per poter fisicamente scrivere usiamo `MapViewOfFile` e mi scollego con  `UnmapViewOfFile`. Solitamente si utilizza con un mutex poichè ci si potrebbe scrivere in contemporanea, non c'è un controllo.
@@ -160,13 +170,15 @@ Permettono comunicazioni tra macchine con sistemi operativi diversi
 
 # IPC Linux
 
-Abbiamo gli stessi concetti con metodi differenti. Abbiamo in più i signal
+Abbiamo gli stessi concetti con metodi differenti. Abbiamo in più i signal.
 
-Gli identificativi non sono nomi, ma id interi non negativi. All'atto della creazione si fornisce una chiave e il sistema la converte nell'ID associato.
-
-Come viene costruita la chiave? A partire da `ftok(...)`. Basta un file di punto di riferimento che può essere usato per ftok e la chiave.
+Gli identificativi non sono nomi, ma id interi non negativi. All'atto della creazione si fornisce una chiave e il sistema la converte nell'ID associato. Coloro che possiedono la chiave potrenno farvi riferimento a meno che la struttura IPC non venga contrassegnata come `IPC_PRIVATE(0)`.
 
 ## Message QUeues
+
+Per comunicare si accordano sul pathname di un file esistente e su un Project ID.
+
+Come viene costruita la chiave? A partire da `ftok(...)`. Basta un file di punto di riferimento che può essere usato per ftok e la chiave.
 
 Strutture che permettono lo scambio di messaggi composti da tipo e messaggio.
 
@@ -180,7 +192,9 @@ Strutture che permettono lo scambio di messaggi composti da tipo e messaggio.
 
 ## Pipe
 
-Anche named FIFO con `mkfifo`
+Permettono IPC tra padre e figlio.
+
+Anche **named** FIFO con `mkfifo` che permette la comunicazione tra processi generici.
 
 ## SHaredMemory
 

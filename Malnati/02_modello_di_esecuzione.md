@@ -6,6 +6,7 @@
   - [Modello di esecuzione di C e C++](#Modello-di-esecuzione-di-C-e-C)
   - [Concorrenza](#Concorrenza)
   - [Processi](#Processi)
+    - [Modalità di esecuzione](#Modalit%C3%A0-di-esecuzione)
   - [Esecuzione di un programma](#Esecuzione-di-un-programma)
   - [Caricamento del codice eseguibile](#Caricamento-del-codice-eseguibile)
   - [Funzione di avvio](#Funzione-di-avvio)
@@ -15,14 +16,14 @@ E' compito del compilatore di introdurre uno strato di adattamento che implement
 
 ## Livello di astrazione
 
-Il programma originale viene trasformato in un nuovo programma con un modello di esecuzione più semplice. Deve farlo il compilatore
+Il programma originale viene trasformato in un nuovo programma con un modello di esecuzione più semplice. Deve farlo il compilatore.
 
 ## Librerie di esecuzione
 
 Offrono meccanismi di base attraverso funzioni:
 
 - Visibili e con funzionalità standard
-- Invisibili al programmatore che sono inserite in fase di compilazione per dupportare l'esecuzione.
+- Invisibili al programmatore che sono inserite in fase di compilazione per supportare l'esecuzione.
 
 ## Modello di esecuzione di C e C++
 
@@ -42,6 +43,8 @@ La libreria di esecuzione non può da sola implementare tutte le astrazioni del 
 Per sopperire a questo vengono usati i **processi**. Un processo è il contesto di esecuzione di un programma. Il sistema sovrintende la creazione dei processi.
 
 Quando un processo viene selezionato per essere eseguito, l'OS configura il processore con le relative risorse, ma serve un supporto.
+
+### Modalità di esecuzione
 
 L'OS richiede un supporto HW per distinguere le due modalità di esecuzione:
 
@@ -67,7 +70,7 @@ Fasi:
 - Caricamento librerie
 - Avvio esecuzione
 
-Lo Spazio di indirizzamento permette a due processi di avere una memoria contigua che appare identica ai due processori, ma sono mappate in posti diversi. (grazie MMU).
+Lo Spazio di indirizzamento permette a due processi di avere una memoria contigua che appare identica ai due processi, ma sono mappate in posti diversi. (grazie MMU).
 
 ***See slides 21, 22***
 
