@@ -2,41 +2,41 @@
 
 ## Table of Contents
 
-- [PDS - Temi di programmazione Malnati](#PDS---Temi-di-programmazione-Malnati)
-  - [Table of Contents](#Table-of-Contents)
-  - [Sestupla 2016-01-26](#Sestupla-2016-01-26)
-    - [Testo](#Testo)
-    - [Implementazione](#Implementazione)
-  - [Phaser 2015-09-11](#Phaser-2015-09-11)
-    - [Testo](#Testo-1)
-    - [Codice](#Codice)
-  - [Classifica 2015-07-15](#Classifica-2015-07-15)
-    - [Testo](#Testo-2)
-    - [Implementazione](#Implementazione-1)
-  - [Exchanger 2016-07-01](#Exchanger-2016-07-01)
-    - [Testo](#Testo-3)
-    - [Implementazione](#Implementazione-2)
-  - [Looper](#Looper)
-    - [Testo](#Testo-4)
-    - [Implementazione](#Implementazione-3)
-  - [Dispatcher 2016-07-13](#Dispatcher-2016-07-13)
-    - [Testo](#Testo-5)
-    - [Implementazione](#Implementazione-4)
-  - [Stack 2011-07-26](#Stack-2011-07-26)
-    - [Testo](#Testo-6)
-    - [Implementazione](#Implementazione-5)
-  - [PubSubHub 2014-06-25](#PubSubHub-2014-06-25)
-    - [Testo](#Testo-7)
-    - [Implementazione](#Implementazione-6)
-  - [Singleton 2019-01-XX](#Singleton-2019-01-XX)
-    - [Testo](#Testo-8)
-    - [Implementazione](#Implementazione-7)
-      - [Singleton.h](#Singletonh)
-      - [Singleton.cpp](#Singletoncpp)
+- [PDS - Temi di programmazione Malnati](#pds---temi-di-programmazione-malnati)
+  - [Table of Contents](#table-of-contents)
+  - [Sestupla 2016-01-26](#sestupla-2016-01-26)
+    - [Testo](#testo)
+    - [Implementazione](#implementazione)
+  - [Phaser 2015-09-11](#phaser-2015-09-11)
+    - [Testo](#testo-1)
+    - [Codice](#codice)
+  - [Classifica 2015-07-15](#classifica-2015-07-15)
+    - [Testo](#testo-2)
+    - [Implementazione](#implementazione-1)
+  - [Exchanger 2016-07-01](#exchanger-2016-07-01)
+    - [Testo](#testo-3)
+    - [Implementazione](#implementazione-2)
+  - [Looper](#looper)
+    - [Testo](#testo-4)
+    - [Implementazione](#implementazione-3)
+  - [Dispatcher 2016-07-13](#dispatcher-2016-07-13)
+    - [Testo](#testo-5)
+    - [Implementazione](#implementazione-4)
+  - [Stack 2011-07-26](#stack-2011-07-26)
+    - [Testo](#testo-6)
+    - [Implementazione](#implementazione-5)
+  - [PubSubHub 2014-06-25](#pubsubhub-2014-06-25)
+    - [Testo](#testo-7)
+    - [Implementazione](#implementazione-6)
+  - [Singleton 2019-01-XX](#singleton-2019-01-xx)
+    - [Testo](#testo-8)
+    - [Implementazione](#implementazione-7)
+      - [Singleton.h](#singletonh)
+      - [Singleton.cpp](#singletoncpp)
       - [main.cpp](#maincpp)
-  - [Barriera Ciclica 2019-07-05](#Barriera-Ciclica-2019-07-05)
-    - [Testo](#Testo-9)
-    - [Implementazione](#Implementazione-8)
+  - [Barriera Ciclica 2019-07-05](#barriera-ciclica-2019-07-05)
+    - [Testo](#testo-9)
+    - [Implementazione](#implementazione-8)
 
 ## Sestupla 2016-01-26
 
@@ -934,3 +934,82 @@ int main() {
 Una Barriera Ciclica è un oggetto di sincronizzazione che permette a N thread (con N specificato all'atto della costruzione dell'oggetto) di attendersi. Tale oggetto dispone di un solo metodo "void attendi()" la cui invocazione blocca il thread chiamante fino a che altri N-1 thread non risultano bloccati insieme ad esso. Quando il numero di thread bloccati raggiunge N, tutti thread si sbloccano e il metodo attendi() ritorna. Ulteriori chiamate al metodo attendi() si comportano analogamente: le prime N-1 invocazioni si bloccano, all'arrivo della successiva invocazione tutti i thread si sbloccano e i metodi ritornano. Si implementi una classe C++ che implementi tale comportamento usando la libreria standard C++.
 
 ### Implementazione
+
+```c++
+#include <iostream>
+#include <mutex>
+#include <condition_variable>
+#include <vector>
+#include <thread>
+
+class CycleBarrier {
+    std::mutex m;
+    std::condition_variable cv;
+    unsigned n_t;
+    unsigned max_t;
+    bool svuotamento;
+public:
+    explicit CycleBarrier(unsigned N) : max_t(N), n_t(0), svuotamento(false) {};
+
+    void attendi() {
+        std::unique_lock lk{m};
+        cv.wait(lk, [&]() { return !svuotamento; });
+        n_t++;
+        if (n_t == max_t) {
+            svuotamento = true;
+            std::cout << "Avvio esecuzione!" << std::endl;
+            n_t--;
+        } else {
+            std::cout << "Attesa..." << std::endl;
+            cv.wait(lk, [&]() { return svuotamento; });
+            std::cout << "Esecuzione!" << std::endl;
+            n_t--;
+        }
+        if (n_t == 0) {
+            svuotamento = false;
+        }
+        cv.notify_all();
+    }
+
+    void aggiungi(int N) {
+        std::unique_lock lk{m};
+        cv.wait(lk, [&]() { return !svuotamento; });
+        max_t += N;
+        if (n_t >= N){
+            std::cout << "Avvio esecuzione dopo incremento!" << std::endl;
+            svuotamento = true;
+        }
+        cv.notify_all();
+    }
+
+    void rimuovi(int N) {
+        std::unique_lock lk{m};
+        cv.wait(lk, [&]() { return !svuotamento; });
+        max_t -= N;
+        if (n_t >= N){
+            std::cout << "Avvio esecuzione dopo decremento!" << std::endl;
+            svuotamento = true;
+        }
+        cv.notify_all();
+    }
+
+};
+
+#define N 15
+
+int main() {
+    std::vector<std::thread> workers;
+    workers.reserve(N);
+    CycleBarrier b(5);
+    for (int i = 0; i < N; i++) {
+        workers.emplace_back(std::thread([&]() {
+            b.attendi();
+        }));
+    }
+
+    for (auto &w : workers) {
+        w.join();
+    }
+    return 0;
+}
+```
