@@ -10,11 +10,11 @@ Il compilatore produce moduli oggetto. In una compilation unit possono rimanere 
 
 Il linker va ad unire più moduli in un eseguibile e va a riempire tutte le lacune con le funzioni di altre unità di compilazione o di libreria richieste.
 
-Le librerie ci permettono di avere moduli oggetto archiviari in un file per evitare di scrivere funzioni base. Solitamente vengono utilizzate per radunare funzioni e strutture dati pertinenti ad uno stesso dominio.
+Le librerie ci permettono di avere moduli oggetto archiviati in un file per evitare di scrivere funzioni base. Solitamente vengono utilizzate per radunare funzioni e strutture dati pertinenti ad uno stesso dominio.
 
 Le librerie contengono le variabili e le funzioni esportate (globali), quelle private che sono accessibili solo all'interno della libreria, ma anche costanti e altre risorse.
 
-L'uso di una librerie richiede due fasi:
+L'uso di una libreria richiede due fasi:
 
 - Identificazione dei moduli necessari e il loro caricamento in memoria
 - Aggiornamento degli indirizzi per puntare correttamente ai moduli caricati.
@@ -35,7 +35,7 @@ Quindi esistono le librerie
 
 Contengono funzionalità collegate staticamente al codice binario cliente in fase di compilazione. La libreria statica è un file archivio. Contiene un insieme di file object creati dal compilatore a partire dal codice sorgente e l'impacchettamento viene effettuato dall'archiver.
 
-Il linker identifica in quali moduli della libreria si trovano le funzioni richiaate dal programma, carica solo quelle necessarie. Alla fine del processo i moduli sono annegati nel codice sorgente.
+Il linker identifica in quali moduli della libreria si trovano le funzioni richiamate dal programma, carica solo quelle necessarie. Alla fine del processo i moduli sono annegati nel codice sorgente.
 
 **Vantaggi**:
 
@@ -53,11 +53,11 @@ In Linux come archiver si usa il tool ar e avranno `.a` come estensione. Per qua
 
 Il file eseguibile non contiene i moduli della libreria. Vengono caricati successivamente nello spazio del processo attraverso il loader (Linux `ld.so` libreria ELF condivisa). Quando l'applicativo viene mappato in memoria viene caricato tutto ciò che serve. In Windows esiste il dynamic linker che fa parte del kernel Windows stesso.
 
-E' possibile di controllare in moaniera esplicita il caricaento delle librerie condivise, può farne richiesta solo quanod è necessario
+E' possibile controllare in maniera esplicita il caricamento delle librerie condivise, può farne richiesta solo quando è necessario
 
-LInux:
+Linux:
 - `dlopen()` rende un object accessibile al programma
-- `dlsym()` recupera l'indirizzo di un simbolo di un file object apero
+- `dlsym()` recupera l'indirizzo di un simbolo di un file object aperto
 - `dlerror()` se una delle operazioni fallisce possiamo ottenere l'errore
 - `dlclose()` non mi interessa più usare la dll specifica, non viene più mappata e viene liberata se non serve a nessun'altro.
 
@@ -73,7 +73,7 @@ Le reason non si considera per problematiche di concerrenza in windows.
 I dati nelle DLL non venono condivise anche se le dll vengono mappate nello stesso spazio di indirizzamento.
 
 Se vogliamo utilizzare le dll dobbiamo fare riferimento alle funzioni che contengono, ma usare delle direttive chiave `dllimport`, `dllexport` se usiamo visual studio.
-SLtrimenti dobbiamo creare un file `.def` per poter costruire la export table.
+Altrimenti dobbiamo creare un file `.def` per poter costruire la export table.
 
 *Esempio implementazione slide 28, 29*
 

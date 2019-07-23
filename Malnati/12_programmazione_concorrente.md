@@ -10,7 +10,7 @@
     - [Errori](#Errori)
   - [Interferenza](#Interferenza)
 
-> Thread nativi Windows e Linux non saranno trattati pocihè ci concentreremo sull'implementazione fornita da C++. Ci nasconde i dettagli esterni proponendoci un'interfaccia astratta.
+> Thread nativi Windows e Linux non saranno trattati poichè ci concentreremo sull'implementazione fornita da C++. Ci nasconde i dettagli esterni proponendoci un'interfaccia astratta.
 
 ## Generalità sulla programmazione concorrente
 

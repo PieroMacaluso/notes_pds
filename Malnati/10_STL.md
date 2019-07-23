@@ -2,6 +2,7 @@
 
 - [STL](#STL)
   - [I/O](#IO)
+    - [I/O File](#IO-File)
     - [Manipolatori `<iomanip>`](#Manipolatori-iomanip)
   - [Standard Template Library](#Standard-Template-Library)
     - [Container](#Container)
@@ -35,6 +36,33 @@ Ci sono delle variabili già preconfezionate che sono `std::cout|cin|cerr`.
 Utilizzando la funzione `width()` per estendere l'input a seconda delle esigenze dell'utente.
 
 Utilizzando la funzione `precision()` si può a ndare a specificare il livello di precisione dei numeri reali.
+
+### I/O File
+
+```c++
+#include <iostream>
+#include <fstream>
+
+int main() {
+    std::ifstream f;
+    std::ofstream out;
+
+    f.open("ciao.txt");
+    out.open("out.txt");
+    if (!f.is_open()) return -1;
+    if (!out.is_open()) return -1;
+
+    int n;
+    f >> n;
+    for(int i = 0; i< n; i++){
+        int a;
+        f >> a;
+        out << a*2 << std::endl;
+    }
+    f.close();
+    out.close();
+}
+```
 
 ### Manipolatori `<iomanip>`
 

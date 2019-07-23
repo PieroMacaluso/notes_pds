@@ -5,13 +5,13 @@
     - [Classe Generica](#Classe-Generica)
   - [Smart Pointer](#Smart-Pointer)
     - [Ownership-Handling](#Ownership-Handling)
-  - [`std::unique_ptr<BaseType>`](#stduniqueptrBaseType)
-  - [`std::shared_ptr<BaseType>`](#stdsharedptrBaseType)
+    - [`std::unique_ptr<BaseType>`](#stduniqueptrBaseType)
+    - [`std::shared_ptr<BaseType>`](#stdsharedptrBaseType)
     - [Polimorfismo](#Polimorfismo)
 
 ## Template
 
-Molto spesso un tipo di programmazione stringente permette di avere un sistema robusto e per non andare a violare il sistema di tipi si va a replicare una grande quantità di codice. Il C++ supporta il concetto di **Template**.
+Molto spesso un tipo di programmazione stringente permette di avere un sistema robusto. Spesso però, per non andare a violare il sistema dei tipi si va a replicare una grande quantità di codice. Il C++ supporta il concetto di **Template**.
 
 Un **template** è un frammento parametrico che viene espanso in fase di compilazione in base al relativo utilizzo. Mantiene perciò la robustezza di un sistema *strong-typed*.
 
@@ -49,7 +49,10 @@ Accum<std::string> sa("");
 Accum<int> ia(0);
 ```
 
-Quando il compilatore incontra il template va a creare un albero sintattico astratto (AST), ma nel momento in cui incontra i frammenti di codice in cui è specificato come viene usato: a quel punto va a produrre le funzioni relative se non sono già state compilate in precedenza.
+Quando il compilatore incontra il template, la compilazione avviene in due fasi:
+
+1. Creazione di un albero sintattico astratto (AST)
+2. Nel momento in cui incontra i frammenti di codice in cui è specificato come viene usato: a quel punto va a produrre le funzioni relative se non sono già state compilate in precedenza, specializzando l'albero sintattico.
 
 I parametri del template possono essere di tipo di dato o valori costanti.
 
@@ -103,13 +106,13 @@ Codici a confronto in slide 23. Nel primo codice se ci potrà essere una eccezio
 Ma a chi appartiene la memoria di uno smart_pointer? Non abbiamo implementato il costruttore di copia apposta. E' possibile andare a:
 
 - Implementare un passaggio di proprietà (`unique_ptr`)
-- posso fare una copia completa
+- Posso fare una copia completa
 - Condivisione con conteggio dei riferimenti (`shared_ptr`), il puntatore viene liberato quando muoiono tutti i riferimenti.
 - Condivisione in lettura e duplicazione in scrittura
 
 ### Ownership-Handling
 
-Unico utilizzatore o eliminato dall'ultimo utilizzatore
+Unico utilizzatore o eliminato dall'ultimo utilizzatore.
 
 La libreria che usiamo è `#include <memory>`
 
@@ -117,20 +120,22 @@ La libreria che usiamo è `#include <memory>`
 - `std::shared_ptr<BaseType>` condivisibile attraverso un meccanismo di conteggio dei riferimenti.
 - `std::weak_ptr<BaseType>` legata allo shared ma non partecipa al conteggio
 
-## `std::unique_ptr<BaseType>`
+### `std::unique_ptr<BaseType>`
 
 Può essere solo trasferito esplicitamente ad un altro `unique_ptr` attraverso la funzione `std::move()`
 Attenzione agli array (`unique_ptr<T[]>`).
 `.reset()` ci permette di rilasciare la memoria.
 
-## `std::shared_ptr<BaseType>`
+Nel C++98 si aveva `auto_ptr` che però è stato deprecato a favore dello `unique_ptr` che implementa correttamente la copia che trasferisce la proprietà. In `auto_ptr` l'errore veniva rilevato a run-time, con `unique_ptr` a compile time.
+
+### `std::shared_ptr<BaseType>`
 
 Alloca più memoria, ma permette di condividere un puntatore. Il puntatore punta a un blocco condiviso che punta al dato. Nel pezzo condiviso avremo il contatore dei puntatori. Possiamo andare a settare una procedura di resetting.
 
 `get()` ci permette di accedere al blocco di memoria.
 `reset()`
 
-la funzione `make_shared<BaseType>(params...)` ci permette di creare un'istanza e restituire il puntatore shared. Garantisce la contiguità dei blocchi.
+La funzione `make_shared<BaseType>(params...)` ci permette di creare un'istanza e restituire il puntatore shared. Garantisce la contiguità dei blocchi.
 
 Il blocco di controllo mantiene distruttore, allocatore, contatore shared_ptr e contatore weak_ptr.
 
@@ -148,4 +153,4 @@ Data una classe D che eredita in modo pubblico da B, un puntatore ad una classe 
 
 Molto spesso ci ritroviamo nella situazione di avere una dipendenza ciclica che manderebbe in crisi il conteggio dei puntatori, per poter risolvere questa faccenda possiamo andare ad utilizzare `std::weak_ptr<BaseType>`. Quest'ultimo mantiene un riferimento dbole al blocco custodito da shared_ptr.
 
-Se io vado a fare una `.lock()` su un `weak_ptr` si andrà a restituire un `shared_ptr` (dobbiamo controllare che lo shared sia vivo con `.expired()`).
+Se io vado a fare una `.lock()` su un `weak_ptr` che modella il possesso temporaneo ad un blocco di memoria. Si andrà a restituire un `shared_ptr` (dobbiamo controllare che lo shared sia vivo con `.expired()`).

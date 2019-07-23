@@ -19,7 +19,7 @@ L'esecuzione avviene immediatamente dopo la costruzione dell'oggetto thread asso
 
 Il costruttore di `thread` riceve un oggetto chiamabile e opzionalmente una serie di parametri. I parametri sono inoltrati attraverso la funzione `std::forward` che mette a disposizione del destinatario un riferimento al dato originale.
 
-I parametri passati per riferimento dobbiamo andare a garantire che il parametro abbia un ciclo di vita più grande di quello del thread. Prima di poter andare ad analizzare il contenuto devo aspettare la fine del thread.
+I parametri passati per riferimento dobbiamo andare a garantire che il parametro abbia un ciclo di vita più grande di quello del thread. Prima di poter andare ad analizzare il contenuto devo aspettare la fine del thread. e.g. `std::ref(res1)`
 
 Spesso vengono utilizzate le funzioni lambda
 
@@ -73,7 +73,7 @@ Molto spesso bisogna mantenere uno o più lock, possiamo utilizzare `std::scoped
 
 `std::unique_lock<Lockable>` estende il lock_guard aggiungendo `lock` e `unlock` (lo devo comunque riprenderlo per farlo liberare al distruttore.
 
-`std::shared_mutex` (C++17) devo usare shared_mutex, 
+`std::shared_mutex` (C++17) posso usare shared_lock, 
 due forme di accesso:
 
 - Lock for Read (Condiviso)

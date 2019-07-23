@@ -664,3 +664,139 @@ Infine, il metodo `unsubscribeAll()` permette ad un thread di cancellare tutte l
 Si implementi la classe C++ `PubSubHub`, usando la libreria standard C++.
 
 ### Implementazione
+
+```c++
+#include <mutex>
+#include <condition_variable>
+#include <string>
+#include <thread>
+#include <map>
+#include <queue>
+#include <set>
+
+class Message {
+public:
+    std::string data;
+    std::string topic;
+    Message(std::string topic, std::string data): topic(topic), data(data){};
+};
+
+class ThreadData {
+public:
+    std::thread::id id;
+    std::queue<Message> queue;
+    std::set<std::string> subs;
+
+    ThreadData (std::thread::id id): id(id){};
+
+    void push(std::string topic, std::string data){
+        Message m(topic, data);
+        this->queue.push(m);
+    }
+
+    bool pop(std::string &topic, std::string &data){
+        Message m = this->queue.front();
+        this->queue.pop();
+        topic = m.topic;
+        data = m.data;
+        return true;
+    }
+
+    bool empty(){
+        return this->queue.empty();
+    }
+};
+
+class PubSubHub {
+    std::map<std::thread::id, ThreadData> thread_data;
+    std::mutex m;
+    std::condition_variable cv;
+public:
+    PubSubHub(){};
+    void subscribe(std::string topic){
+        std::unique_lock lk{m};
+        std::thread::id tid = std::this_thread::get_id();
+        auto it_th = thread_data.find(tid);
+        if (it_th != thread_data.end()){
+            it_th->second.subs.insert(topic);
+        } else {
+            ThreadData td(tid);
+            td.subs.insert(topic);
+            auto pair = std::make_pair(tid, td);
+            thread_data.insert(pair);
+        }
+    }
+
+    void publish(std::string topic, std::string data){
+        std::unique_lock lk{m};
+        std::thread::id tid = std::this_thread::get_id();
+        for (auto it = thread_data.begin(); it != thread_data.end(); it++){
+            auto it1 = it->second.subs.find(topic);
+            if (it1 != it->second.subs.end()){
+                it->second.push(topic, data);
+                cv.notify_all();
+            }
+        }
+    }
+
+    bool getData(std::string &topic, std::string &data){
+        std::unique_lock lk{m};
+        std::thread::id tid = std::this_thread::get_id();
+        auto it = thread_data.find(tid);
+        if (it != thread_data.end()){
+            cv.wait(lk, [&](){
+                return !it->second.empty();
+            });
+            it->second.pop(topic,data);
+            return true;
+        }
+        return false;
+    }
+
+    void unsubscribeAll(){
+        std::unique_lock lk{m};
+        std::thread::id tid = std::this_thread::get_id();
+        auto it = thread_data.find(tid);
+        if (it != thread_data.end()){
+            thread_data.erase(it);
+        }
+    }
+};
+
+#define N 15
+
+int main() {
+    PubSubHub hub;
+    hub.subscribe(std::to_string(0));
+    hub.subscribe(std::to_string(1));
+
+    std::vector<std::thread> workers;
+    workers.reserve(N);
+    for (int i = 0; i < N / 3; i++) {
+        workers.emplace_back([i, &hub]() {
+            hub.subscribe(std::to_string(i));
+        });
+    }
+
+    for (int i = 0; i < N / 3; i++) {
+        workers.emplace_back([i, &hub]() {
+            std::string data;
+            std::string topic;
+            hub.getData(topic, data);
+        });
+    }
+
+    for (int i = 0; i < N / 3; i++) {
+        workers.emplace_back([i, &hub]() {
+            hub.publish(std::to_string(i), std::to_string(i + 10));
+        });
+    }
+    std::string topic;
+    std::string data;
+    hub.getData(topic, data);
+    for (auto &w : workers) {
+        w.join();
+    }
+    return 0;
+}
+```
