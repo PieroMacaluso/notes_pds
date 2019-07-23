@@ -1,6 +1,9 @@
 # PDS - Temi di programmazione Malnati
 
+## Table of Contents
+
 - [PDS - Temi di programmazione Malnati](#PDS---Temi-di-programmazione-Malnati)
+  - [Table of Contents](#Table-of-Contents)
   - [Sestupla 2016-01-26](#Sestupla-2016-01-26)
     - [Testo](#Testo)
     - [Implementazione](#Implementazione)
@@ -25,8 +28,20 @@
   - [PubSubHub 2014-06-25](#PubSubHub-2014-06-25)
     - [Testo](#Testo-7)
     - [Implementazione](#Implementazione-6)
+  - [Singleton 2019-01-XX](#Singleton-2019-01-XX)
+    - [Testo](#Testo-8)
+    - [Implementazione](#Implementazione-7)
+      - [Singleton.h](#Singletonh)
+      - [Singleton.cpp](#Singletoncpp)
+      - [main.cpp](#maincpp)
+  - [Barriera Ciclica 2019-07-05](#Barriera-Ciclica-2019-07-05)
+    - [Testo](#Testo-9)
+    - [Implementazione](#Implementazione-8)
 
 ## Sestupla 2016-01-26
+
+[Back to top](#Table-of-Contents)
+
 
 ### Testo
 
@@ -124,6 +139,9 @@ int main() {
 
 ## Phaser 2015-09-11
 
+[Back to top](#Table-of-Contents)
+
+
 ### Testo
 
 Classe Phaser, con metodi void attendi(), void aggiungi(), void rimuovi(). La classe permette a N-1 thread di attendersi tra loro, quando sono N-1 si sbloccano.
@@ -199,6 +217,9 @@ int main() {
 
 ## Classifica 2015-07-15
 
+[Back to top](#Table-of-Contents)
+
+
 ### Testo
 
 Una classe concorrente che gestisse la classifica di un gioco online: ogni concorrente è identificato da un nick e ha un punteggio associato. Un metodo ritornava una copia della classifica, un altro inseriva un nuovo punteggio relativo a un concorrente (inserendo un nuovo concorrente in classifica se non esistente o aggiornando il punteggio se maggiore di quello vecchio), un metodo si metteva in attesa di variazioni sulla classifica.
@@ -258,6 +279,9 @@ public:
 ```
 
 ## Exchanger 2016-07-01
+
+[Back to top](#Table-of-Contents)
+
 
 ### Testo
 
@@ -338,6 +362,9 @@ int main() {
 ```
 
 ## Looper
+
+[Back to top](#Table-of-Contents)
+
 
 ### Testo
 Sia data una classe Handler che gestisce una coda di tipo Message tramite un metodo handle.
@@ -448,6 +475,9 @@ int main() {
 ```
 
 ## Dispatcher 2016-07-13
+
+[Back to top](#Table-of-Contents)
+
 
 ### Testo
 
@@ -575,6 +605,9 @@ public:
 
 ## Stack 2011-07-26
 
+[Back to top](#Table-of-Contents)
+
+
 ### Testo
 
 Una applicazione Win32 presenta più thread che devono operare in modo concorrente su uno stack di stringhe unicode. Si implementi una classe C++ che incapsuli il comportamento di tale stack thread-safe. Deve permettere l'inserimento di nuove stringhe nello stack e l'estrazione dell'ultima stringa inserita (notificando il caso di stack vuoto). Porre particolare attenzione alla gestione della memoria e della concorrenza.
@@ -641,6 +674,9 @@ int main() {
 ```
 
 ## PubSubHub 2014-06-25
+
+[Back to top](#Table-of-Contents)
+
 
 ### Testo
 
@@ -800,3 +836,101 @@ int main() {
     return 0;
 }
 ```
+
+## Singleton 2019-01-XX
+
+[Back to top](#Table-of-Contents)
+
+
+### Testo
+
+> Testo dedotto dalle risoluzioni trovate in rete.
+
+Si implementi una classe Singleton thread safe che possegga un metodo `log(std::string msg)` per poter scrivere in maniera concorrente in un file di testo che conterrà il log dell'applicazione.
+
+### Implementazione
+
+#### Singleton.h
+
+```c++
+#include "Singleton.h"
+
+std::once_flag Singleton::inited;
+std::shared_ptr<Singleton> Singleton::instance;
+
+std::shared_ptr<Singleton> Singleton::getInstance() {
+    std::call_once(inited, [](){
+        instance = std::shared_ptr<Singleton>(new Singleton());
+    });
+    return instance;
+}
+
+void Singleton::log(std::string msg) {
+    std::lock_guard<std::mutex> lg(mutex);
+    file.open("file.txt", std::ofstream::app);
+    if (!file.is_open()) throw;
+    file << std::this_thread::get_id() << " " << msg << std::endl;
+    file.close();
+}
+```
+
+#### Singleton.cpp
+
+```c++
+#ifndef SINGLETON_SINGLETON_H
+#define SINGLETON_SINGLETON_H
+
+#include <iostream>
+#include <future>
+#include <fstream>
+#include <mutex>
+
+class Singleton {
+    std::mutex mutex;
+    static std::shared_ptr<Singleton> instance;
+    static std::once_flag inited;
+    std::ofstream file;
+
+    Singleton(){};
+
+public:
+    static std::shared_ptr<Singleton> getInstance();
+    void log(std::string msg);
+};
+
+#endif //SINGLETON_SINGLETON_H
+```
+
+#### main.cpp
+
+```c++
+#include <iostream>
+#include <vector>
+#include <thread>
+#include "Singleton.h"
+
+#define N 10
+
+int main() {
+    Singleton::getInstance();
+    std::vector<std::thread> workers;
+    workers.reserve(N);
+    for (int i = 0; i< N; i++){
+        workers.emplace_back(std::thread([i](){
+            Singleton::getInstance()->log(std::to_string(i));
+        }));
+    }
+
+    for (auto &w : workers){
+        w.join();
+    }
+    return 0;
+}
+```
+
+## Barriera Ciclica 2019-07-05
+
+### Testo
+Una Barriera Ciclica è un oggetto di sincronizzazione che permette a N thread (con N specificato all'atto della costruzione dell'oggetto) di attendersi. Tale oggetto dispone di un solo metodo "void attendi()" la cui invocazione blocca il thread chiamante fino a che altri N-1 thread non risultano bloccati insieme ad esso. Quando il numero di thread bloccati raggiunge N, tutti thread si sbloccano e il metodo attendi() ritorna. Ulteriori chiamate al metodo attendi() si comportano analogamente: le prime N-1 invocazioni si bloccano, all'arrivo della successiva invocazione tutti i thread si sbloccano e i metodi ritornano. Si implementi una classe C++ che implementi tale comportamento usando la libreria standard C++.
+
+### Implementazione
