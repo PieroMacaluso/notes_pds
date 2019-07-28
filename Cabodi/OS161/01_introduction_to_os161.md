@@ -211,3 +211,90 @@ L'incremento o in generale l'aggiornamento deve essere atomico.
 E' il tipo di dato più semplice che ci garantisce una protezione della sezione critica., ma la soluzione che richiede busy waiting è lo SPIN LOCK, semplice, ma bisogna limitarne l'uso perchè lo spin lock continua a girare.
 
 TestAndTestAndSet è migliore perchè riduce leggermente il busy waiting.
+
+## Mutex Exclusion using a Semaphore
+
+```c
+struct semaphore *s;
+s = sem_create("MySem1", 1);
+
+P(s);
+
+/* Critical Section */
+
+V(s);
+```
+
+E' uno strumento di sincronizzazione più complesso del mutex. E' una variabile intera a cui viene garantita l'atomicità.
+
+### Versione semplice
+
+####  `wait()`
+
+```c
+wait(S) {
+    while(S <= 0) ; busy wait
+
+    S--
+}
+```
+
+#### `signal(S)`
+
+```c
+signal(S){
+    S++;
+}
+```
+
+### Versione complessa
+
+Dobbiamo associare al semaforo una coda di attesa. Invece di continuare a fare il test mi metto in attesa, complicherò la vita a chi fa la signal.
+
+Esistono due modelli:
+
+- La wait si ferma con zero
+- La wait si ferma ma decrementa
+
+```c
+typedef struct {
+    int value;
+    struct process *list;
+} semaphore;
+```
+
+Disabilitare l'interrupt può essere utilizzato per fare le operazioni in modo atomico in single core. Nella versione 1.9x tutto funzionava con questa metodologia.
+
+Mettere priorità alta significa significa disabilitare l'interrupt, bassa abilitarlo. Se non dovessi acquisire il semaforo metto il thread in sleep: gli altri non possono farlo, ma io sì.
+
+Se non sono sicuro che sia a zero si può realizzare con:
+```c
+spl = splhigh(); /* Spl alto */
+splx(spl); /* Resetto spl */
+```
+
+### Monitor
+
+Oggetto della mutua esclusione. Un'astrazione di alto livello che permette una metodologia conveniente per gestire il processo di sincronizzazione.
+
+
+### Wait on Condition
+
+Lock per proteggere e Semaforo per segnalare. Ma in questa condizione se vado in attesa sono comunque owner del lock, altri thread non potranno modificare i dati -> Deadlock.
+
+Per risolvere il problema dobbiamo:
+
+- Rilasciare il lock quando si aspetta (NO DEADLOCK) e riprenderlo quando ci si risveglia.
+- Bisogna ritestare nuovamente la condizione
+
+### Condition Variables
+
+Fa l'operazione del semaforo (wait e signal) e mi permette di agganciare un lock che posso rilasciare e riprendere nella wait.
+
+Il while è presente perchè ricontrollare la situazione se lo scheduler non garantisce immediatezza.
+
+### OS161
+
+In os161 abbiamo spinlock per fare mutua esclusione veloce. Abbiamo anche i wait channels che implementano le condition variable a livelo del kernel utilizzando lo spin lock.
+
+In OS161 2.0 multicore andiamo ad utilizzare i semafori. 
