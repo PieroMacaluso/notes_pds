@@ -30,3 +30,50 @@ Un disco può essere diviso in partizioni.
 Solitamente si utilizzano FS general-purpose, ma in realtà ce ne sono di tipi diversi.
 
 Un direttorio deve essere efficiente, garantire una nominazione comoda.
+
+### Organizzazione Direttori
+
+#### Single-Level Directory
+
+Una singola cartella per tutti gli user
+
+#### Two-Level Directory
+
+Direttorio separato per ogni user. Path Name. Avendo due livelli è possibile andare a riutilizzare lo stesso nome.
+
+#### Tree-Structured Directories
+
+Direttorio organizzato ad albero che permette una ricerca più efficiente.
+
+#### Acyclic-Graph Directories
+
+Grafo diretto aciclico. Il ciclo è possibile solo attraverso le cartelle e non deve esserci poichè non ha senso, si perde la cognizione di contenente e contenuto. Per farlo basta andare a permettere link solo verso file e non sottodirectory.
+
+Come si può fare il DAG?
+
+Link simbolico è inserito in una tabella di corrispondenza di nomi.
+Ma cosa succede se devo eliminare il file con i due contatori evitando il Dangling Pointer?
+
+- Puntatori all'indietro.
+- DaisyChain, strategia che mi permette di riconoscerli e di cancellare tuti archi entranti.
+- Si cancella l'arco, ma non il file. Il file rimane fino a quando non sono state eliminate tutti gli archi.
+
+Come garantisco che non siano presenti cicli?
+
+- Permetto di evitare condividere un direttorio
+- Garbage Collection, permetto cicli, ma ogni tanto viene fatta una passata e vengono rimossi.
+- Ogni volta che sia ggiunge un link si va a ricercare il ciclo.
+
+## FS Mounting System
+
+Un file system può essere utilizzato solo se viene montato.
+
+## File Sharing
+
+Su un sistema abbiamo tre livelli di utente. Il proprietario, il gruppo e l'ID user.
+
+## Protection
+
+Read Write Execute. RWX (owner, group, public)
+
+Append Delete List (e.g. website).

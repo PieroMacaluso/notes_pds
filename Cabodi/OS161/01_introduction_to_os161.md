@@ -298,3 +298,37 @@ Il while è presente perchè ricontrollare la situazione se lo scheduler non gar
 In os161 abbiamo spinlock per fare mutua esclusione veloce. Abbiamo anche i wait channels che implementano le condition variable a livelo del kernel utilizzando lo spin lock.
 
 In OS161 2.0 multicore andiamo ad utilizzare i semafori. 
+
+# Running a User Process
+
+Quando il kernel crea un processo lo fa per avviare un eseguibile. Crea address space e carica il programma e i dati in esso.
+
+Vengono creati con `int common_prog(int nargs, char **args)`.
+
+La fork permette di duplicare l'address space `pid fork(void)`.
+
+La funzione `int execv(const char *program, char**args)` invece va a sostituire l'eseguibile corrente.
+
+## `common_prog`
+
+crea il processo e poi thread fork.
+
+`curthread` e `curproc` sono le strutture dati utilizzate.
+
+`runprogram` crea l'address space e inserisce il programma.
+
+`load_elf`
+
+## System Calls
+
+`tf->tf_v0` è il callno
+
+`tf->tf_aX` è argomento Xesimo
+
+`kgets` ha `\0`
+
+## FS
+
+## File Open/Close
+
+SFT ogni apertura è una riga lì.

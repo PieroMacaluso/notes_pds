@@ -1,14 +1,35 @@
 # Main Memory
 
+- [Main Memory](#main-memory)
+  - [Introduzione](#introduzione)
+    - [Protezione](#protezione)
+    - [Base e Limit](#base-e-limit)
+    - [Address Binding](#address-binding)
+    - [Logico contro Fisico](#logico-contro-fisico)
+    - [Dynamic Loading](#dynamic-loading)
+    - [Dynamic Linking](#dynamic-linking)
+  - [Allocazione contigua](#allocazione-contigua)
+    - [Problema Allocazione](#problema-allocazione)
+    - [Frammentazione](#frammentazione)
+  - [Paginazione](#paginazione)
+    - [Address Translation Scheme](#address-translation-scheme)
+    - [Page Table implementation](#page-table-implementation)
+      - [Effective Access Time](#effective-access-time)
+    - [Memory Protection](#memory-protection)
+    - [Pagine condivise](#pagine-condivise)
+    - [Struttura Page Table](#struttura-page-table)
+      - [Tabella delle Pagine Gerarchica](#tabella-delle-pagine-gerarchica)
+      - [Hashed Page Tables](#hashed-page-tables)
+      - [Inverted Page Table](#inverted-page-table)
+  - [Swapping](#swapping)
 ## Introduzione
 
-### Background
-Un programma deve essere portato dal disco all amemoria per poterli fare andare. La memoria centrale e i registri sono le uniche unità a cui la CPU può accedere direttamente per poter agire in maniera efficiente.
+Un programma deve essere portato dal disco alla memoria per poterli fare andare. La memoria centrale e i registri sono le uniche unità a cui la CPU può accedere direttamente per poter agire in maniera efficiente.
 
-La MMU è il pezzo di memoria che si interfaccia con la RAM.
+La **MMU** è quella parte di CPU che si interfaccia con la RAM.
 La MMU vede sono una serie di indirizzi + richieste di lettura o indirizzi e richieste di dati e scrittura.
 
-L'accesso ad un registro può essre fatto in un colpo di clock o ancora meno. L'accesso alla ram può essere effettuata in più cicli e può causare lo stall.
+L'accesso ad un registro può essere fatto in un colpo di clock o ancora meno. L'accesso alla ram può essere effettuata in più cicli e può causare lo stallo.
 
 Le memorie cache sono memorie più piccole, ma più veloci e si trovano tra la memoria centrale e i registri della CPU.
 
@@ -43,7 +64,7 @@ Il binding degli indirizzi può avvenire in:
 - Indirizzo logico: generato dalla CPU, spesso ci riferiamo a questo anche come virtuale (simili, ma sottile differenza).
 - Indirizzo fisico: indirizzo visto dalla MMU.
 
-Sono i medesimi in compilazione e loading, ma sono diversi in esecuzione.
+Sono identici in compilazione e loading, ma sono diversi in esecuzione.
 
 Il passaggio viene effettuato nella MMU, che mappa gli indirizzi logici su quelli fisici.
 
@@ -92,7 +113,7 @@ La frammentazione esterna può essere fatta con **compaction**. Mescolare la mem
 
 ## Paginazione
 
-Lo spazio di indirizzamento logico è sempre contiguo, ma quello fisico può non essere contiguo. La memoria fisica viene divisa in una serie di pezzi fissi detti **frame**. La memoria logica viene divisa in blocchi di dimensione fissa chiamati **pagine**. Tiene tracia di tutti i frame liberi. Per avviare un programma con N pagine abbiamo bisogno di N frame liberi. Abbiamo bisogno di una page table per poter mantenere corrispondenza tra le due, ma questo costa di più. Anche il backing store (pezzo di disco come salvataggio di processi in esecuzione) deve essere suddiviso in pagine. Ci può ancora essere frammentazione interna.
+Lo spazio di indirizzamento logico è sempre contiguo, ma quello fisico può non essere contiguo. La memoria fisica viene divisa in una serie di pezzi fissi detti **frame**. La memoria logica viene divisa in blocchi di dimensione fissa chiamati **pagine**. Tiene traccia di tutti i frame liberi. Per avviare un programma con N pagine abbiamo bisogno di N frame liberi. Abbiamo bisogno di una page table per poter mantenere corrispondenza tra le due, ma questo costa di più. Anche il backing store (pezzo di disco come salvataggio di processi in esecuzione) deve essere suddiviso in pagine. Ci può ancora essere frammentazione interna.
 
 ### Address Translation Scheme
 
@@ -141,7 +162,7 @@ E' possibile che due processi abbiano due aree di memoria condivise. Una copia d
 
 Il privato può essere inserito arbitrariamente, per le condivise bisogna fare ulteriori considerazioni.
 
-### Struttra Page Table
+### Struttura Page Table
 
 Ogni entry contiene un numero di byte e allargo un po' per i validity, ma ottengo quindi XMB. Dovrebbe avere indirizzo fisico della page table. Ma si può pensare a soluzioni per non avere la tabella delle pagine gerarchica.
 
