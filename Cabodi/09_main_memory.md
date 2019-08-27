@@ -22,12 +22,10 @@
       - [Hashed Page Tables](#hashed-page-tables)
       - [Inverted Page Table](#inverted-page-table)
   - [Swapping](#swapping)
+
 ## Introduzione
 
-Un programma deve essere portato dal disco alla memoria per poterli fare andare. La memoria centrale e i registri sono le uniche unità a cui la CPU può accedere direttamente per poter agire in maniera efficiente.
-
-La **MMU** è quella parte di CPU che si interfaccia con la RAM.
-La MMU vede sono una serie di indirizzi + richieste di lettura o indirizzi e richieste di dati e scrittura.
+Un programma deve essere portato dal disco alla memoria per poterli essere eseguito. La memoria centrale e i registri sono le uniche unità a cui la CPU può accedere direttamente per poter agire in maniera efficiente. La **MMU** è quella parte di CPU che si interfaccia con la RAM. QUest'ultima vede sono una serie di indirizzi + richieste di lettura o indirizzi e richieste di dati e scrittura.
 
 L'accesso ad un registro può essere fatto in un colpo di clock o ancora meno. L'accesso alla ram può essere effettuata in più cicli e può causare lo stallo.
 
@@ -39,15 +37,17 @@ La protezione della memoria deve essere assicurata per poter assicurare operazio
 
 > Spectre e Meltdown: utilizzo speculativo di operazioni che ha creato bug.
 
+Un processo può accedere solo a quegli indirizzi di memoria che sono nel suo address space. Nel corso del tempo sono state sperimentate diverse tecniche per garantire questa proprietà.
+
 ### Base e Limit
 
-Un processo può accedere solo agli indirizzi che appartengono al loro spazio di indirizzamento. Per farlo nella maniera più rudimentale possibile possiamo usare i registri **base** e **limit**.
+Per farlo nella maniera più rudimentale possibile possiamo usare i registri **base** e **limit**. E' possibile farlo andando a utilizzare due comparatori HW che lanciano una trap in caso di errore.
 
-Le istruzioni per accedere ai registri sono privilegiate. La CPU deve sempre andare ad analizzare ad ogni accesso in memoria. Due comparatori Hardware che attivano una trap se non validi.
+Le istruzioni per accedere ai registri sono privilegiate. La CPU deve sempre andare ad analizzare ad ogni accesso in memoria.
 
 ### Address Binding
 
-Chi associa gli indirizzi ai dati? Quando vengono eseguiti vengono portati in memoria. Ma gli indirizzi possono essere rappresentati in maniere molto diverse all'interno della vita del programma. Nel codice sorgente abbiamo simboli, nel codice compilato andiamo a indirizzarli in indirizzi rilocabili (salta a 14 byte dopo quel punto, somma di due pezzi, chi fa la somma?). Il linker o il loader andranno a legare gli indirizzi a indirizzi assoluti.
+Chi associa gli indirizzi ai dati? Quando i programmi vengono eseguiti, questi vengono portati in memoria, ma gli indirizzi possono essere rappresentati in maniere molto diverse all'interno della vita del programma. Nel codice sorgente abbiamo simboli, nel codice compilato andiamo a indirizzarli in indirizzi rilocabili (salta a 14 byte dopo quel punto, somma di due pezzi, chi fa la somma?). Il linker o il loader andranno a legare gli indirizzi a indirizzi assoluti.
 
 Servono delle mappe.
 
@@ -55,14 +55,14 @@ In sistemi molto semplici abbiamo esecuzioni sempre negli stessi indirizzi, ma n
 
 Il binding degli indirizzi può avvenire in:
 
-- Compilazione: Codice assoluto, ma deve essere ricompilato se la locazione di inizio cambia.
-- Loading: deve generare codice rilocabile se la memoria non è conosciuta in fase di compilazione
-- Esecuzione: Il binding è ritardato alla fase di esecuzione se il processo può muoversi in esecuzione da un segmento ad un altro. Ha bisogno di supporto hardware per le mappe degli indirizzi.
+- **Compilazione**: Codice assoluto, ma deve essere ricompilato se la locazione di inizio cambia.
+- **Loading**: deve generare codice rilocabile se la memoria non è conosciuta in fase di compilazione
+- **Esecuzione**: Il binding è ritardato alla fase di esecuzione se il processo può muoversi in esecuzione da un segmento ad un altro. Ha bisogno di supporto hardware per le mappe degli indirizzi.
 
 ### Logico contro Fisico
 
-- Indirizzo logico: generato dalla CPU, spesso ci riferiamo a questo anche come virtuale (simili, ma sottile differenza).
-- Indirizzo fisico: indirizzo visto dalla MMU.
+- **Indirizzo logico**: generato dalla CPU, spesso ci riferiamo a questo anche come virtuale (simili, ma sottile differenza).
+- **Indirizzo fisico**: indirizzo visto dalla MMU.
 
 Sono identici in compilazione e loading, ma sono diversi in esecuzione.
 
@@ -94,9 +94,9 @@ Una volta continuato questo approccio ci troveremo ad avere partizioni variabili
 
 ### Problema Allocazione
 
-- First-fit: il primo buco grande abbastanza
-- Best-fit: le guardo tutte e prendo la più piccola
-- Worst-fit: le guardo tutte e prendo l'intervallo più grande
+- **First-fit**: il primo buco grande abbastanza
+- **Best-fit**: le guardo tutte e prendo la più piccola
+- **Worst-fit**: le guardo tutte e prendo l'intervallo più grande
 
 Tutto dipende dal contesto, di solito sono meglio le prime in termini di velocità e utilizzo dello storage.
 
@@ -104,12 +104,12 @@ Tutto dipende dal contesto, di solito sono meglio le prime in termini di velocit
 
 GLi schemi di allocazione contigua tendono a generare problemi di frammentazione. Ne esistono due tipi:
 
-- Frammentazione esterna: somma totale di ciò che è disponibile, ma è fatto a pezzettini
-- Frammentazione interna: sovrallocazione dello spazio allocato per un processo
+- **Frammentazione esterna**: somma totale di ciò che è disponibile, ma è fatto a pezzettini
+- **Frammentazione interna**: sovrallocazione dello spazio allocato per un processo
 
 L'utilizzo della politica first-fit rivela che dato N blocchi allocati abbiamo 0.5N blocchi persi  con la frammentazione (1/3 potrebbe essere inutilizzabile perchè troppo piccola, regola del 50%).
 
-La frammentazione esterna può essere fatta con **compaction**. Mescolare la memoria per piazzare tutti gli spazi liberi in un unico punto, può essere possibile solo se la relocazione è dinamica ed è fatta in esecuzione.
+La frammentazione esterna può essere ridotta con **compaction**. Mescolare la memoria per piazzare tutti gli spazi liberi in un unico punto, può essere possibile solo se la relocazione è dinamica ed è fatta in esecuzione.
 
 ## Paginazione
 
@@ -197,4 +197,4 @@ Doppio buffering, copiali su un buffer di kernel e esegui.
 
 Sui sitemi mobili non è solitamente supportato. Solitamente iOS chiede, mentre Android chiude, ma salva lo stato.
 
-Swapping con la paginazione. 
+Swapping con la paginazione.

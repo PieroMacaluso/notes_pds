@@ -29,13 +29,13 @@
     - [Struttura del programma](#struttura-del-programma)
     - [I/O Interlock](#io-interlock)
 
-Il codice deve essere e seguito, ma serve tutto il programma in memoria? No, non serve tutto.
+Il codice deve essere e seguito, ma spesso non serve che tutto il programma risieda in memoria centrale.
 
-E' anche plausibile che certe parti servono insieme. Vogliamo misurare quale è la capacità di utilizzare un programma parzialmente memorizzato in RAM.
+E' anche plausibile che certe parti possano servire insieme. Vogliamo misurare quale è la capacità di utilizzare un programma parzialmente memorizzato in RAM.
 
 Cosa significa Virtual Memory? Lo spazio virtuale c'è tutto, ma il fisico è solo di alcune parti. Per questo viene chiamato virtuale e non logico.
 
-Lo spazio di memoria virtuale è la visione logica di come il processo è indirizzato in memoria. QUesto è concettualemente contiguo, ma in MMU vnegono trasformati in indirizzi fisici. MMU deve effettuare il mapping. Molto spesso è paginazione a richiesta.
+Lo spazio di memoria virtuale è la visione logica di come il processo è indirizzato in memoria. QUesto è concettualemente contiguo, ma in MMU venegono trasformati in indirizzi fisici. MMU deve effettuare il mapping. Molto spesso è paginazione a richiesta.
 
 Solitamente si vanno a inserire stack negli spazi alti e code, data e heap in basso.
 
@@ -73,9 +73,9 @@ Il caso estremo è quando viene avviato un processo senza pagine in memoria. Il 
 
 In generale potrebbe essere utile inserire una serie di pagine in memoria: Locality of reference.
 
-QUesta cosa può funzionare con supporto HW, l'accesso è gestito dai registri appositi e dalla tabella delle pagine. Il tutto si basa sull'**operation restart**, il riavvio dell'applicazione una volta risolto il page fault. Una istruzione èperò potrebbe occupare più di una pagina.
+Questa cosa può funzionare con supporto HW, l'accesso è gestito dai registri appositi e dalla tabella delle pagine. Il tutto si basa sull'**operation restart**, il riavvio dell'applicazione una volta risolto il page fault. Una istruzione però potrebbe occupare più di una pagina.
 
-QUando avviene un page fault il OS deve portare una pagina nella main memory. Per far questo si mantiene una **free-frame list**. Il sistema operativo fornisce pagine azzerate in generale. Quando il sistema si avvia tutta la memoria disponibile viene inserita nella free-fram list.
+Quando avviene un page fault l' OS deve portare una pagina nella main memory. Per far questo si mantiene una **free-frame list**. Il sistema operativo fornisce pagine azzerate in generale. Quando il sistema si avvia tutta la memoria disponibile viene inserita nella free-fram list.
 
 ### Worst Case
 
@@ -93,6 +93,7 @@ QUando avviene un page fault il OS deve portare una pagina nella main memory. Pe
 12. Ripristino dei registri, stato del processo e la nuova page table. Si ripristina l'istruzione interrotta.
 
 Le attività principali sono tre:
+
 - Servizio interrupt
 - Lettura pagina
 - Riavvio del processo
@@ -126,15 +127,13 @@ L'obiettivo sarà quello di andare a ridurre il numero di page-fault. In general
 
 #### FIFO Algorithm
 
-Gestione FIFO. Aggiungere ulteriori page frames potrebbe causare più page fault: **Belady's Anomaly**. Ti posso dimostrare che possa non essere detto che diminuendo il numero di frame diminuisca il numero di page fault.
+Gestione FIFO. Aggiungere ulteriori page frames potrebbe causare più page fault: **Belady's Anomaly**. Si dimostra che non è detto che diminuendo il numero di frame diminuisca il numero di page fault.
 
 ![Belady's Anomaly](img/10/belady.png)
-
 
 #### Algoritmo Ottimo
 
 L'algoritmo ottimo è quello che sceglie come vittima quella che non verrà utilizzata in un periodo di tempo futuro. Serve a dirci il limite massimo per poter analizzare meglio gli altri metodi.
-
 
 #### Least Recently Used LRU
 
@@ -209,16 +208,16 @@ Quando la dimensione della località diventa più grande della memoria disponibi
 
 ### Modello Working-Set
 
-Il working set permette di andare a rappresentare la località degli accessi nel passato. 
+Il working set permette di andare a rappresentare la località degli accessi nel passato.
 Il delta è la finestra del working set è un numero fisso di pagine referenziate.
 
-WSS_i (P_i) numero totale di pagine ha cui si è fatto riferimento nel delta precedente.
+WSS_i (P_i) numero totale di pagine a cui si è fatto riferimento nel delta precedente.
 
 Se la delta è troppo piccola potrei non contenere tutta la località, se fosse troppo grande rischio di allargarmi.
 
 Ma ad ogni step devo togliere un frame dal working set e aggiungerne un altro: complicato perchè aggiungo un overhead per ogni accesso.
 
-L'idea è ancora di andare ad approssimare. Se abbiamo un delta di 10000 possiamo andare a mettere un interrupt timer ogni 5000 unità temporali. Ad ogni accesso manteniamo 2 bit che ci permettono di avere una visione ci quanto è distante quel frame.
+L'idea è ancora di andare ad approssimare. Se abbiamo un delta di 10000 possiamo andare a mettere un interrupt timer ogni 5000 unità temporali. Ad ogni accesso manteniamo 2 bit che ci permettono di avere una visione di quanto è distante quel frame.
 
 Ad ogni interruzione shiftiamo il reference bit e ne aggiungiamo uno a 0. Se la pagina avrà tutti i bit a 0 sarà fuori dai 10000, mentre dentro se ne avrà minimo 1.
 
@@ -240,7 +239,7 @@ Allocare in maniera contigua con segmenti di blocco di dimensione fissa. La memo
 
 ### Slab Allocation
 
-Ci sono pagine continue che sono allocati in slab. Uno Slab è una o più pagine contigue di memoria fisica. La cache consiste in uno o più slab. Un oggetto kernel andrà ad allocare uno spazio in cache se, se va bene avrà uno slab, altrimenti ne allocherà di più.
+Ci sono pagine continue che sono allocati in slab. Uno Slab è una o più pagine contigue di memoria fisica. La cache consiste in uno o più slab. Un oggetto kernel andrà ad allocare uno spazio in cache, se va bene avrà uno slab, altrimenti ne allocherà di più.
 
 ## Altre considerazioni
 

@@ -14,14 +14,13 @@ Per misurare la performance abbiamo i seguenti parametri:
 - Latenza di rotazione: quanto tempo ci mette per ritornare sul dato che vogliamo leggere? Espressa in giri al minuto
 - La latenza media è la metà
 
-
 Latenza di Accesso = Tempo medio di accesso = average seek time + average latency
 
 Il tempo di I/O è quindi = average access time + (quantità da trasferire/transfer rate) + overhead controller.
 
 In poche parole conviene sempre trasmettere KB per non rendere vano il tempo che si perde in latenza e seek.
 
-I dischi non volatili sono chiamati Solid-state disks (SSDs) se hanno la forma di disco. Invludono anche le USB drives. Può essere più affidabile di un hdd, ma sono più costosi e con un tempo di vita minore. solitamente hanno minore capacità, ma una velocità molto più alta. Non ci sono parti in movimento.
+I dischi non volatili sono chiamati Solid-state disks (SSDs) se hanno la forma di disco. Includono anche le USB drives. Può essere più affidabile di un hdd, ma sono più costosi e con un tempo di vita minore. solitamente hanno minore capacità, ma una velocità molto più alta. Non ci sono parti in movimento.
 
 Il blocco in questo caso deve essere prima cancellato e poi scritto. Il numero di cancellazionei è però limitato. La vita è misurata in **drive writes per day (DWPD)**.
 
@@ -31,7 +30,7 @@ Anche se sono delle sorte di RAM conviene sempre dividerle in pagine.
 
 Spesso anche le stesse RAM vengono utilizzate come storage ad alta velocità per breve tempo.
 
-I nastri magnetici sono ormai preistoria. I dischi magnetici venivano utilizzati per backup. La memorizzazione è sequenziale.
+I nastri magnetici sono ormai preistoria. Questi erano un tipo di memorizzazione sequenziale e venivano utilizzati per backup.
 
 Solitamente i dischi sono collegati attraverso **I/O busses**.
 Un disco è come un vettore di blocchi logici, è il fattore che ha permesso di poter organizzare come meglio si ritiene all'interno del disco. Andando avanti con l'innovazione attualmente è presente un microcontrollore sul dispositivo che gestisce le richieste.

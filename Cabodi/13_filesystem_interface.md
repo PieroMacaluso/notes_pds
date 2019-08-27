@@ -1,5 +1,17 @@
 # File-System Interface
 
+- [File-System Interface](#file-system-interface)
+  - [File](#file)
+  - [Directory](#directory)
+    - [Organizzazione Direttori](#organizzazione-direttori)
+      - [Single-Level Directory](#single-level-directory)
+      - [Two-Level Directory](#two-level-directory)
+      - [Tree-Structured Directories](#tree-structured-directories)
+      - [Acyclic-Graph Directories](#acyclic-graph-directories)
+  - [FS Mounting System](#fs-mounting-system)
+  - [File Sharing](#file-sharing)
+  - [Protection](#protection)
+
 Se non hai ancora esperienza di OS, vediamo cosa è necessario avere dai file. Cosa deve fare il file System? Cosa chiede l'utente.
 
 ## File

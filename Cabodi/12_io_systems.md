@@ -37,7 +37,6 @@ Per ogni byte di I/O:
 
 Il busy bit diventa però inefficiente se il dispositivo e lento, occupando CPU. Può essere critico. RIschio di perdere la reazione immediata.
 
-
 ## Interrupt
 
 Sono la sveglia che ci permette di avviare l'operazione.
@@ -73,7 +72,7 @@ Il timer può essere considerato come dispositivo e può essere impostato con in
 ## Non Blocking and Asynchronous
 
 - Blocking (quasi sinonimo di sincrono). Blocco finchè non è finito.
-- Non bloccanti: I/O call ritorna appena disponibile. Non aspetto, ma accetto il rischio che non venga effettuata subito. Ciò che sto per fare non deve essere determinante da quello che devo fare subito dopo. 
+- Non bloccanti: I/O call ritorna appena disponibile. Non aspetto, ma accetto il rischio che non venga effettuata subito. Ciò che sto per fare non deve essere determinante da quello che devo fare subito dopo.
 - Asincrono. Non bloccante, ma c'è la possibilità di risincronizzarsi in caso di necessità in cui il sistema ne avrà bisogno.
 
 ## Vectored I/O
@@ -90,13 +89,13 @@ Vettore di richieste
 
 ## Error Handling
 
-
+Il sistema operativo può recuperare il flusso di esecuzione dopo un errore che può riguardare lle più svariate motivazioni: lettura disco, dispositivo non disponibile, etc..
 
 ## Strutture Kernel
 
 Servono strutture per poter gestire gli interrupt utente.
 
-![](img/12/recapioreq.png)
+![Recap Kernel Request](img/12/recapioreq.png)
 
 ## STREAMS
 

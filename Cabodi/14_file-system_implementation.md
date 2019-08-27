@@ -76,6 +76,7 @@ Nella system wide la struttura scomparirà appena non ci saranno più open relat
 ### Allocazione contigua
 
 numero blocco iniziale e quanti sono i blocchi. Ma frammentazione esterna e critica. SOlitamente si fanno schemi di compattazione online o offline.
+
 ### ExtentBased System
 
 Un po' di allocazione contigua in un extent, se non basta si procede con un altro.
@@ -86,6 +87,7 @@ Prima vera alternativa alla allocazione contigua.
 Non è contigua e non ha frammentazione esterna, ma paghiamo nel momento in cui dobbiamo fare accesso diretto. Questo perchè quasi sicuramente un file verrò utilizzato in maniera sequenziale.
 
 Vantaggi:
+
 - No ext fragm
 - Puntatore a blocco successivo
 - Non è necessario compattazione
@@ -120,7 +122,7 @@ Il metodo dipende con il tipo di accesso che vogliamo fare.
 ALlocazione contigua va bene per accesso sequanziale o random.
 La linked è buona per sequenziale, ma non per random.
 
-L'utilizzo di indici è più complesso, 
+L'utilizzo di indici è più complesso,
 
 ## Free-Space Gestione
 
