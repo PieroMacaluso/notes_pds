@@ -29,13 +29,13 @@
     - [Struttura del programma](#struttura-del-programma)
     - [I/O Interlock](#io-interlock)
 
-Il codice deve essere e seguito, ma spesso non serve che tutto il programma risieda in memoria centrale.
+Il codice deve essere eseguito, ma spesso non serve che tutto il programma risieda in memoria centrale.
 
 E' anche plausibile che certe parti possano servire insieme. Vogliamo misurare quale è la capacità di utilizzare un programma parzialmente memorizzato in RAM.
 
 Cosa significa Virtual Memory? Lo spazio virtuale c'è tutto, ma il fisico è solo di alcune parti. Per questo viene chiamato virtuale e non logico.
 
-Lo spazio di memoria virtuale è la visione logica di come il processo è indirizzato in memoria. QUesto è concettualemente contiguo, ma in MMU venegono trasformati in indirizzi fisici. MMU deve effettuare il mapping. Molto spesso è paginazione a richiesta.
+Lo spazio di memoria virtuale è la visione logica di come il processo è indirizzato in memoria. Questo è concettualemente contiguo, ma in MMU vengono trasformati in indirizzi fisici. MMU deve effettuare il mapping. Molto spesso è paginazione a richiesta.
 
 Solitamente si vanno a inserire stack negli spazi alti e code, data e heap in basso.
 
@@ -102,7 +102,7 @@ Page Fault Rate = `p`
 
 Effective Access Time (EAT) = `(1-p) x memory access + p (page fault overhead + swap page out + swap page in)`.
 
-E' necessario ridurre il numero di page fault. Il primo aspetto è quello di andare a cambiare disco per ridurre i costi di swap in e swap out. Utilizzare una parte del disco come spazio di sap.
+E' necessario ridurre il numero di page fault. Il primo aspetto è quello di andare a cambiare disco per ridurre i costi di swap in e swap out. Utilizzare una parte del disco come spazio di swap.
 
 Se si carica una pagina che riguarda un eseguibile non serve fare lo swap out poichè non abbiamo modifiche da applicare.
 
@@ -183,6 +183,7 @@ Potremmo sfruttare dei dati delle applicazioni per poter andare a inferire infor
 ### Number Of Frames
 
 Ogni processo avrà un numero minimo di frame e un numero massimo. Esistono due schemi di allocazione: **fissa** o **prioritaria**.
+ Due comparatori Hardware che attivano una trap se non validi.
 
 #### Allocazione Fissa
 

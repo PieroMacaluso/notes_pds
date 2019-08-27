@@ -1,5 +1,17 @@
 # Mass-Storage Systems
 
+- [Mass-Storage Systems](#mass-storage-systems)
+  - [Disk Scheduling](#disk-scheduling)
+    - [FCFS](#fcfs)
+    - [SCAN](#scan)
+    - [C-SCAN](#c-scan)
+    - [SSTF](#sstf)
+    - [NVM](#nvm)
+  - [Error Detection and Correction](#error-detection-and-correction)
+  - [Storage Attachment](#storage-attachment)
+  - [Storage Array](#storage-array)
+    - [Struttura RAID](#struttura-raid)
+
 Attualmente abbiamo hard disk drives (HDD) e nonvolatile memory (NVM).
 
 ![Disco](img/11/disco.png)
