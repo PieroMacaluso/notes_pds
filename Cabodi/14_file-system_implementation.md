@@ -1,5 +1,29 @@
 # File System Implementation
 
+- [File System Implementation](#file-system-implementation)
+  - [Struttura File System](#struttura-file-system)
+    - [Device Driver](#device-driver)
+    - [Basic File System](#basic-file-system)
+    - [File Organization Module](#file-organization-module)
+    - [Logical File System](#logical-file-system)
+  - [Operazioni FS](#operazioni-fs)
+    - [Boot Control Block](#boot-control-block)
+    - [VOlume Control Block](#volume-control-block)
+  - [FS Implementation](#fs-implementation)
+  - [Directory Implementation](#directory-implementation)
+  - [Metodi allocazione](#metodi-allocazione)
+    - [Allocazione contigua](#allocazione-contigua)
+    - [ExtentBased System](#extentbased-system)
+    - [Linked Allocation](#linked-allocation)
+    - [FAT File Allocation Table](#fat-file-allocation-table)
+    - [Indexed Allocation](#indexed-allocation)
+    - [INODE](#inode)
+  - [Performance](#performance)
+  - [Free-Space Gestione](#free-space-gestione)
+  - [Efficiency and Performance](#efficiency-and-performance)
+  - [Page Cache](#page-cache)
+  - [Log Structured File Systems](#log-structured-file-systems)
+
 ## Struttura File System
 
 Strutturazione logica del disco fisso e una collezione di informazioni relative.
