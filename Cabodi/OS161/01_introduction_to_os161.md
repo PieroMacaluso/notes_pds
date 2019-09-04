@@ -56,7 +56,7 @@ La enter_new_process prepara tutto nella trapframe.
 
 ## System Calls
 
-E' il modo con cui un processo utente può chiedere qualcosa al processo utente. I programmi, per chiamare un pezzo di kernel devono utilizzare le Application Programming Interface (API). Viene fatta una chiamata alla funzione di più basso livello.
+E' il modo con cui un processo utente può chiedere qualcosa al processo kernel. I programmi, per chiamare un pezzo di kernel devono utilizzare le Application Programming Interface (API). Viene fatta una chiamata alla funzione di più basso livello.
 
 In OS161, è presente una switch che permette di richiamare le varie funzioni di basso livello a seconda della trapframe richiamata. Una sorta di tabella di interrupt.
 
@@ -276,7 +276,6 @@ splx(spl); /* Resetto spl */
 ### Monitor
 
 Oggetto della mutua esclusione. Un'astrazione di alto livello che permette una metodologia conveniente per gestire il processo di sincronizzazione.
-
 
 ### Wait on Condition
 
