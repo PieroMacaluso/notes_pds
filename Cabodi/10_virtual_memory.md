@@ -56,8 +56,8 @@ C'è bisogno di inserire nuove funzionalità nella MMU.
 
 ### Valid-Invalid bit
 
-Valida: c'è come frame in RAM
-Invalida: non c'è come frame in RAM.
+- Valida: c'è come frame in RAM
+- Invalida: non c'è come frame in RAM.
 
 Se viene trovato i, viene scatenato un page-fault.
 
@@ -212,7 +212,7 @@ Quando la dimensione della località diventa più grande della memoria disponibi
 Il working set permette di andare a rappresentare la località degli accessi nel passato.
 Il delta è la finestra del working set è un numero fisso di pagine referenziate.
 
-WSS_i (P_i) numero totale di pagine a cui si è fatto riferimento nel delta precedente.
+`WSS_i (P_i)` numero totale di pagine a cui si è fatto riferimento nel delta precedente.
 
 Se la delta è troppo piccola potrei non contenere tutta la località, se fosse troppo grande rischio di allargarmi.
 
