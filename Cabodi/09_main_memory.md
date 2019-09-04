@@ -180,7 +180,7 @@ Dimensionata sulla RAM. Un solo vettore per tutte le page table.
 
 Esempio: Pagina 50, frame 87.
 
-Scrivo p = 50 alla riga 87, quindi l'indice serve come parte iniziale. La page table sta in memoria principale ed è parallela alla RAM. Posso tenere tutti i processi insieme. Tempo di ricerca più lungo.
+Scrivo p = 50 alla riga 87, quindi l'indice serve come parte iniziale. La page table sta in memoria principale ed è parallela alla RAM. Posso tenere tutti i processi insieme. Tempo di ricerca più lungo. No memory sharing.
 
 ## Swapping
 
@@ -195,6 +195,6 @@ Ma ovviamente il context switching costa a livello di tempo.
 L'unico vero problema è che se un processo è in wait for I/O come mi comporto, posso mandarlo fuori?
 Doppio buffering, copiali su un buffer di kernel e esegui.
 
-Sui sitemi mobili non è solitamente supportato. Solitamente iOS chiede, mentre Android chiude, ma salva lo stato.
+Sui sistemi mobili non è solitamente supportato. Solitamente iOS chiede, mentre Android chiude, ma salva lo stato.
 
 Swapping con la paginazione.
